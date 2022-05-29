@@ -1,0 +1,1722 @@
+---
+title: ""
+date: ""
+fontsize: 12pt
+output: 
+  pdf_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    includes:
+      in_header: labels.tex
+      before_body: PortadaTesis.tex
+geometry: margin=2.54cm
+csl: apa.csl
+bibliography: FuentesTesis.bib
+---
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(tidysynth)
+library(readr)
+library(readxl)
+library(haven)
+library(reshape2)
+library(zoo)
+library(lubridate)
+library(doBy)
+library(gtable)
+library(grid)
+library(gridExtra)
+library(wesanderson)
+library(ggpubr)
+library(viridis)
+library(hrbrthemes)
+library(ggthemes)
+library(RColorBrewer)
+library(Synth)
+library(ggthemr)
+library(reshape2)
+library(writexl)
+library(lemon)
+options(scipen=999)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{=tex}
+\lhead{}
+\chead{}
+\lfoot{Marco Méndez Atienza}
+\cfoot{Mayo 2022}
+\rfoot{Página \thepage ~de~ \pageref{LastPage}}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+\renewcommand{\footrulewidth}{0.4pt}
+```
+\newpage
+
+$$\\[3in]$$
+
+# Introducción
+
+En 2018, el *Journal of the American Medical Association (JAMA)* publicó un reporte sobre la mortalidad mundial por armas de fuego de 1990 a 2016. Según los datos presentados, 250 mil personas murieron por esta causa en el periodo señalado, siendo 6 países de América los que concentraron más de la mitad de las muertes: Brasil, Estados Unidos, México, Colombia, Venezuela y Guatemala. La lista mundial es encabezada por Brasil (43 000 fallecidos), seguido por Estados Unidos (37 000), India (26 500), México (15 400), Colombia (13 300), Venezuela (12 800), Filipinas (8 200), Guatemala (5 090), Rusia (4 380) y Afganistán (4 050).
+
+Este estudio analiza la mortalidad relacionada con armas de fuego entre 1990 y 2016 en 195 países por edad y sexo, pero excluye las muertes en conflictos, ejecuciones y tiroteos de las fuerzas policíacas. De manera específica para el caso mexicano, de enero a septiembre de 2018 se cometió el siguiente número de delitos con armas de fuego: 21 486 homicidios, 8 033 lesiones y 146 feminicidios, de acuerdo a los datos del Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública (SESNSP).
+
+El Índice de Paz en México (IPM) 2021, elaborado por el *Institute for Economics and Peace*, colocó a nuestro país en el número 117 de 163 países; por su parte, la Ciudad de México (CDMX) está en el puesto 18 en términos de las entidades federativas más pacíficas. A pesar de que el documento afirma una mejora en la paz en 2020 a nivel nacional con respecto al periodo 2015-2018, donde se deterioró, se menciona que México sigue siendo el país con la novena tasa de homicidios más alta del mundo, 20 veces superior al promedio mundial.
+
+El Observatorio Nacional Ciudadano (ONC), en su Reporte anual sobre delitos de alto impacto en la CDMX 2018, señaló que el 69.9% de los homicidios dolosos se cometieron con arma de fuego; de las 40 carpetas de investigación abiertas por feminicidio, el 20% se realizó con el mismo artefacto; además, se reportaron 1 741 lesiones dolosas por la misma razón, más que en 2017. De acuerdo al documento, *"[...] por primera vez, las cifras mostraron que el 70% de los homicidios dolosos se cometieron con armas de fuego. Esto direcciona el problema del homicidio hacia el uso ilegal y el tráfico de armas de fuego, por lo que una de las vías para reducir la cifra de homicidios en la Ciudad (de México) es sacar las armas de las calles"* (ONC, 2019).
+
+En enero de 2019, un mes después de haber tomado protesta como Jefa de Gobierno de la Ciudad de México, la Dra. Claudia Sheinbaum Pardo anunció el lanzamiento del programa "Sí al desarme, sí a la paz" el cual consiste en el intercambio de armas de fuego por dinero en efectivo o incentivos en especie (Expansión, 2019). De acuerdo a un comunicado de la Jefatura de Gobierno en 2021, de enero de 2019 a septiembre de 2021, el programa recabó casi 6 mil armas de fuego cortas y largas y más de un millón de municiones, equivalentes a un monto ejercido de más de 18 millones de pesos.
+
+En las mismas declaraciones, Claudia Sheinbaum aseguró que el objetivo de retirar armas de fuego de la población y las calles es reducir los delitos de alto impacto cometidos con estas. El Secretario de Gobierno de la Ciudad de México, Martí Batres, apuntó que dicho programa ayudó a reducir en 48.7% las lesiones dolosas y en 35.5% los homicidios dolosos, ambos con armas de fuego.
+
+Así, es claro que el estudio de la relación entre las armas de fuego y la violencia es pertinente y relevante para nuestro país y Ciudad de México; en primer lugar, para determinar que efectivamente existe; en segundo, para medir la magnitud y dirección de dicha relación; finalmente, porque su existencia y relevancia tienen implicaciones de política pública no despreciables en términos del tipo de programas que se implementan para combatir la violencia y delitos, así como sus alcances, objetivos e instrumentación.
+
+Por tal motivo, la presente investigación estudia la relación que guarda la disponibilidad de armas de fuego en la población con los delitos cometidos con ellas en la Ciudad de México. Específicamente, se plantea la siguientes preguntas: (1) ¿El programa "Sí al desarme, sí a la paz" ha incrementado el número de armas de fuego canjeadas en la Ciudad desde su implementación"; (2) ¿El programa ha reducido los delitos cometidos con armas de fuego en la capital del país desde su implementación?; y (3) ¿Los efectos del programa persistieron desde enero de 2019 o se disiparon rápidamente?.
+
+Para dar respuesta a tales interrogantes, se hace uso del método de control sintético (MCS), planteado de originalmente por Abadie & Gardeazabal en 2003 y Abadie *et. al* en 2010. Esta metodología es usada para evaluar el efecto de tratamiento en estudios de caso comparativos; particularmente, el MCS estima el efecto de una intervención escogida comparando (1) la evolución de una variable resultado para una unidad afectada por el tratamiento y (2) la evolución de la misma unidad para un grupo de control sintético.
+
+Este grupo de control sintético es creado mediante una combinación ponderada de unidades de control elegidas para aproximar su comportamiento al de la unidad tratada. Así, la evolución de la variable resultado para el grupo de control sintético resultante es una estimación del contrafactual: lo que se hubiera observado en la unidad afectada en ausencia del tratamiento. Para los objetivos de esta investigación, la unidad tratada es la Ciudad de México, las unidades de control potenciales las 31 entidades federativas restantes, y la variable resultado de interés los delitos cometidos con armas de fuego.
+
+Los resultados encontrados exhiben, en primer lugar, que la implementación de "Sí al desarme, sí a la paz" significó un aumento significativo en el número de armas canjeadas en la capital del país a partir de enero de 2019. Específicamente, se encuentra que el inicio del programa provocó un alza sumamente grande en el número de armas canjeadas en la capital del país, así como de la proporción en relación con el resto de estados. 
+
+Como se verá más adelante, no se puede rechazar la hipótesis de que las armas canjeadas por cada 100 000 habitantes en la Ciudad de México sean estadísticamente iguales a la media nacional antes de la intervención; asimismo, tampoco puede rechazarse la hipótesis de que éstas no sean sustancialmente mayores después de enero de 2019.
+
+Además, se encuentra que el lanzamiento del programa y el subsecuente aumento de canjes de armas de fuego que conllevó, implicó una disminución sustancial de los delitos cometidos con estas en la Ciudad de México. Los resultados indican una caída promedio mensual de 46% en la incidencia por cada 100 000 habitantes de los delitos con armas de fuego derivado de la implementación de "Sí al desarme, sí a la paz".
+
+Dada la relevancia de estos resultados, en las secciones posteriores se explica más detalladamente el conjunto de pruebas de robustez realizado a ellos. De manera resumida, dichas pruebas fortalecen varios puntos: (1) efectivamente existió un efecto de tratamiento en la Ciudad de México que, además, fue relativamente el más grande respecto al resto del país; (2) el efecto perduró durante los meses posteriores a la implementación del programa y no se disipó, sino que al contrario, se fortaleció, (3) no existe evidencia estadística de que los resultados encontrados sean producto del azar o por alguna causa diferente al inicio de "Sí al desarme, sí a la paz".
+
+Así, las contribuciones de la presente investigación existen en tres sentidos: en primer lugar, se abona al entendimiento del efecto causal de la disponibilidad de armas sobre la violencia o delincuencia. Como se revisará más adelante, este debate ha existido durante varias décadas y los resultados al respecto han sido ambivalentes, por lo que los resultados presentados aquí ayudan a zanjar la discusión al respecto.
+
+En segundo lugar, el enfoque utilizado es innovador en el sentido de que, virtualmente, no existen estudios que hayan analizado programas de canje o entrega voluntaria de armas de fuego por parte de la población como determinantes de la violencia o delincuencia. En este sentido, los resultados que se presentan aquí funcionan también como herramientas de evaluación de políticas públicas de este tipo.
+
+En tercer lugar, los estudios sobre esta relación en el caso de México son altamente escasos, siendo la mayoría estudios descriptivos del panorama de seguridad nacional o evaluaciones cualitativas de las políticas federales encaminadas a atender el problema. Así, no hay registro de que se haya utilizado un enfoque a nivel subnacional para analizar el contexto de la situación delictiva o los programas para atender la violencia en una entidad federativa en particular. 
+
+Las líneas restantes se dividen como sigue: la sección 2 presenta (1) una revisión de la literatura existente alrededor de la relación entre armas de fuego y violencia o incidencia delictiva a nivel mundial y en el caso mexicano. Además, (2) un panorama general de las armas y la violencia en México y la capital del país, así como de la situación que guarda la legislación y contexto institucional del acceso a las armas de fuego por parte de la población.
+
+En la tercera parte, se especifica la estrategia de identificación pertinente y el modelo utilizado para los cálculos posteriores. La sección 4 resume las fuentes de datos utilizados y el tratamiento aplicado a ellos. En la quinta sección se presentan los resultados principales encontrados, así como sus pruebas de validez y robustez. La última parte del documento realiza comentarios generales sobre los resultados más relevantes hallados y plantea interrogantes pendientes alrededor del tema.
+
+\newpage
+
+$$\\[3in]$$
+
+# Antecedentes y revisión de literatura
+
+La primera parte de esta sección se revisa la literatura existente sobre el control de armas a nivel internacional y acerca de la relación de armas y violencia en México. En la segunda, se ilustran las tendencias descriptivas más relevantes sobre los delitos en general en México y en su capital; además, de manera específica, también se exhiben aquellas de los delitos cometidos con armas de fuego. Por otro lado, se hace una revisión de las características cualitativas alrededor de la situación y legislación de la portación y posesión de armas de fuego en nuestro país, tomando en cuenta los programas de canjes de armas impulsados por el Gobierno Federal.
+
+
+## Revisión de la literatura
+
+
+La literatura alrededor de la relación entre las armas y la violencia es relativamente sustancial, sobre todo a nivel internacional. Sin embargo, existe un debate alrededor del tema, lo que implica opiniones y hallazgos ambivalentes; por tal motivo, es pertinente revisar primero aquellos que soportan, en mayor o menor medida, la hipótesis de este trabajo: una menor disponibilidad de armas tiene un efecto en la reducción en la violencia. 
+
+En uno de los primeros estudios al respecto (Zimring, 1968), los resultados, producto de un análisis meramente descriptivos, ilustran patrones relevantes sobre las armas y violencia en Chicago: la tasa de homicidio por cada 100 habitantes es cinco veces mayor con armas de fuego que con armas blancas. Así, parece evidente que una parte sustancial de las tasas de homicidios de la ciudad fueron explicadas por la letalidad del artefacto utilizado, lo que implica que la escasez de armas de fuego deprimiría la tasa de homicidios esperada.
+
+En otra investigación cualitativa (Seitz, 1972), también de las primeras realizadas al respecto, se vislumbran hallazgos seminales sobre una relación indirecta entre las leyes de control de armas y la incidencia de homicidios criminales a nivel nacional en EE.UU.: reducir la disponibilidad de armas mitiga la ocurrencia de homicidios, donde el efecto es más del doble para la población blanca (28%) en relación con la no blanca (13%). Así, los resultados apuntan a que una legislación de control de armas sólida es un medio eficiente para reducir la incidencia criminal.
+
+Más recientemente, se han analizado datos espaciales sobre armas de fuego y un elemento cualitativo de entrevistas a convictos criminales en diversos estados de EE.UU (Collins *et. al*, 2017). Los hallazgos indican que las recuperaciones y los éxitos de rastreo de armas de fuego varían según las jurisdicciones y según el tipo de delito. Las regulaciones de jurisdicción se asociaron con la proporción de armas compradas en el estado y el tiempo de recuperación, pero no con las características del comprador. Por otra parte, las entrevistas de delincuentes encarcelados revelaron que el método más común para obtener un arma de fuego era robarla o comprarla en la calle.
+
+El tema ha sido retomado, incluso, en la literatura médica y de salud pública (Webster & Wintemunte, 2015): resaltando la debilidad de las políticas de control de armas en Estados Unidos, la cual, en muchas ocasiones, resulta en que individuos "no aptos" tengan acceso a armas de fuego para cometer crímenes violentos. De acuerdo a sus resultados, la mitad o más de aquellos que cometen delitos con armas de fuego no cumplen con las condiciones prohibitivas de las leyes federales (es decir, no debieron tener acceso a las armas en primer lugar). No obstante, señalan que, a nivel micro, los criminales que intentan adquirir armas de fuego legalmente de puntos de venta autorizados pero que son rechazados, son menos propensos a cometer crímenes.
+
+La idea de que los delitos cometidos con armas de fuego y no con otros elementos (como armas blancas) son más letales podría parecer obvia; sin embargo, autores han revisado los argumentos alrededor del tema y han concluido que si bien las armas de fuego están presentes en situaciones mucho más letales, esto se debe a la intencionalidad del delito, y no tanto en su instrumentación: esto es, aquellos criminales que eligen cometer crímenes con armas de fuego lo hacen porque, muchas ocasiones, tienen la intención de que su acción sea letal en primer lugar, por lo que no utilizan otro tipo de artefactos (Braga *et. al*, 2021).
+
+Más recientemente se ha estudiado la doble relación entre la temperatura y las características de las leyes de control de armas sobre la violencia (Colmer & Doleac, 2021). En este artículo, los autores explotan el vínculo ya estudiado entre temperatura y crímenes violentos y hallan que la violencia relacionada con la temperatura es 150% más grande en estados estadounidenses con controles de armas más permisivos en comparación con aquellos con leyes más estrictas.
+
+De manera más cualitativa, en otra investigación se revisan las características más relevantes del sistema y legislación australianos de control de armas, considerados por muchos como los mejores y más exitosos del mundo (Alpers & Ghazarian, 2019). Desde su punto de vista, las políticas públicas en cuestión fueron exitosas debido a varios factores: primero, se alinearon con la convicción personal del Primer Ministro, secundadas por el público y los medios de comunicación, de que Australia no debería desarrollar una cultura de las armas como los EE.UU; en segundo lugar, el gobierno en turno se presentó a sí mismo como lo suficientemente fuerte para instrumentar y aplicar los cambios pertinentes.
+
+Además, las políticas fueron transversales a todos los actores y partidos políticos, lo que conllevó un gran apoyo popular; dicho apoyo fue mucho más sustantivo en las áreas metropolitanas; finalmente, el gobierno se aseguró que los grupos de interés pro-armas no estuvieran en posibilidades de extender su influencia sobre la agenda pública. En general, la política australiana tuvo una propuesta de valor público claramente definida y centrada en generar resultados socialmente beneficiosos. Realizar una evaluación cualitativa de las virtudes y defectos de "Sí al desarme, sí a la paz" no es el objeto principal de este trabajo, pero es deseable que se realice una comparación del programa en la Ciudad de México con los casos internacionales más exitosos, como el citado.
+
+En el caso del estudio de la relación entre las armas de fuego y la violencia en México, la literatura es mucho más escasa, aunque relevante para la presente investigación. Una de ellas estudia las implicaciones de las políticas de control de armas en Estados Unidos sobre la violencia en nuestro país (Mehakalo, 2012) . En su artículo, argumenta que el tráfico ilegal de armas en México ha sido facilitado por la laxa política de control de armas del vecino del norte: en sus palabras, "la política estadounidense ha creado una organización criminal paramilitar en México - pagando por sus drogas y permitiendo que las armas de fuego sean adquiridas".
+
+En otro sentido, se ha cuestionado si leyes más permisivas sobre la posesión y tenencia de armas tendrían un efecto en la reducción de la violencia en México (Vargas & Pérez, 2019). Al analizar la experiencia estadounidense, donde las armas son más prevalentes, su análisis apunta a que las armas no tienen un efecto disuasorio sobre la violencia y, de hecho, pueden provocar más muertes por armas de fuego. Adicionalmente, su evidencia ilustra que la implementación de leyes más permisivas tendría el potencial de engrosar la capacidad armamentística de las organizaciones criminales. El análisis de los autores es tan refinado que también argumentan que este tipo de políticas conllevaría una escalada de la violencia sufrida por las fuerzas policiales, mujeres y dentro de las escuelas.
+
+En dos artículos diferentes (Chicoine, 2016; Dube *et al.*, 2013) se estudia la expiración del *Assault Weapons Ban (AWB)*, ley federal estadounidense vigente de 1993 a 2003 y que prohibía la manufactura y venta de armas semiautomáticas y rifles de asalto por y para civiles, sobre la violencia en México. En la primera investigación, y a través del método de diferencias en discontinuidades, los resultados del modelo usado apuntan a un incremento estadísticamente significativo sobre las tasas de homicidios con armas de fuego en nuestro país; además, dicho efecto fue más grande en zonas cercanas a la frontera entre ambos países y no se encontró un incremento concurrente de otro tipo de homicidios o crímenes violentos. 
+
+El segundo artículo, cuyo análisis es realizado a nivel municipal y con el clásico enfoque de diferencias en diferencias, presenta hallazgos similares: aquellos municipios cercanos a Texas, Arizona y Nuevo México (pero no a California, que mantuvo el veto del *AWB*) exhibieron un mayor número de delitos con armas de fuego a partir de 2004; adicionalmente, se indica que la magnitud de este efecto es contingente a factores políticos relacionados con transiciones electorales. Específicamente, que los homicidios se incrementaron desproporcionadamente en municipios donde las elecciones locales fueron más competitivas.
+
+Como se mencionó, las conclusiones alrededor de la relación entre armas y violencia son ambivalentes y varían a través de tipos de delitos, el tiempo y los estados (Manski & Pepper, 2018). En sentido contrario a la relación defendida por la hipótesis planteada en este documento, se ha encontrado que (Klack & Patterson, 1993): (1) la existencia de leyes de control de armas no reduce la prevalencia  de armas en ciudades de EE.UU., (2) la prevalencia de armas no tiene un efecto medible positivo sobre las tasa de violencia (excepto por un posible efecto sobre el número de suicidios), y (3) la mayoría de leyes de control de armas no reducen las tasas criminales, aunque algunas podrían hacerlo. 
+
+Para explicar el tercer resultado, los autores sugieren que el fracaso de las leyes de control de armas sobre el uso de estas en delitos y crímenes puede deberse al inmenso tamaño del mercado de armas en EE.UU.: con cientos de millones de armas en manos privadas, es difícil evitar que lleguen a alguien que realmente la desea. A manera de comentario margen, recuérdese que este no ocurre en el caso mexicano, donde el mercado de armas es, literal y absolutamente, monopolizado por un solo punto de venta.
+
+En otra investigación, se estudió el efecto de la disponibilidad legítima de armas de fuego sobre los crímenes violentos en Carolina del Sur (Stolzenberg & D'Alessio, 2000), utilizando datos más completos de los que se habían usado hasta ese momento. Después de estimar variaciones de un modelo de efectos fijos con una gran cantidad de medidas de resultado y variables independientes, no se encuentra evidencia de que la disponibilidad legítima de armas de fuego tuviera ninguna influencia sobre las tasas de crímenes violentos cometidos con ellas. Así, los hallazgos tienen una implicación doble: por un lado, rechaza la idea de que una mayor cantidad de armas de fuego entre la población disuade a los criminales de cometer delitos; por otro, también contradice el argumento de que que más armas conllevan un mayor número de crímenes cometidos con ellas.
+
+En la otra mano, hay indicios que sostienen que la asociación positiva entre la disponibilidad de armas y las tasas de homicidio encontrada en estudios internacionales ha sido producto de un sesgo muestral y la incapacidad de controlar por variables *counfounding* (o factores de confusión) (Kovandzic & Kleck, 2021): al controlar por las diferencias culturales y el desarrollo económico de muchas naciones del mundo, dicha asociación desaparece. Además, señalan que la causalidad puede ser inversa: una menor tasa de homicidios podría ser causa de menos disponibilidad de armas entre la población (dado que las personas se sienten más seguras, ya no quieren o necesitan poseer ni portar armas de fuego).
+
+A partir de los artículos citados que rechazan que una menor disponibilidad de armas reduzca la violencia, es pertinente apuntar algunas cosas en relación con la presente investigación. En primer lugar, si bien se mencionó que el fracaso de algunas políticas de control de armas está relacionada con el inmenso tamaño del mercado existente, por ejemplo, en Estados Unidos, nótese que este no es el caso de México. En nuestro país, el mercado de armas no solo es monopólico, dado que la Sedena es la única instancia autorizada para vender armas, sino que además existe un solo punto de venta en donde se pueden adquirir estos artefactos: la Dirección de Comercialización de Armamento y Municiones de la Sedena. Así, la reducción en la disponibilidad de armas tiene, al menos en teoría, más posibilidades de reducir la violencia.
+
+En segundo lugar,  también se ha afirmado que una mayor disponibilidad de armas, medida mediante el número de permisos de portación emitidos anualmente, no está relacionada con la incidencia criminal (Stolzenberg & D'Alessio, 2000). Aunque se trata de un resultado válido y pertinente para el debate que nos ocupa, existe una diferencia fina, aunque importante, en cuanto al enfoque de esta investigación y la de los autores mencionados. Mientras que ellos miden la disponibilidad de armas con los permisos emitidos, los análisis realizados en este documento giran en torno al retiro de armas de la población de la Ciudad de México: es una medida mucho más directa que tiene que ver con los artefactos en cuestión y no una medida indirecta como la usada en ese artículo.
+
+En tercer y último lugar, también se ha argumentado la posibilidad de que exista una causalidad inversa: que la ocurrencia de un mayor número de delitos provoque una sensación de inseguridad en la población, provocando que los ciudadanos se armen más, y viceversa. En el caso mexicano, no es probable que este tipo de relación exista porque, como se ilustra más adelante, la incidencia delictiva de otros delitos no ha disminuido en la capital del país, por lo que la población no tiene demasiadas razones para sentirse segura. Además, no existe evidencia de que los estados más inseguros del país sean también los más armados.
+
+
+## Antecedentes cuantitativos y cualitativos
+
+```{r BASES, include=FALSE}
+
+# Bases de datos
+
+delitos <- read_excel("~/COLMEX/Tesis/Datos/SESNSP.xlsx")
+poblacion <- read_excel("~/COLMEX/Tesis/Datos/poblacion.xlsx")
+canjes <- read_excel("~/COLMEX/Tesis/Datos/CanjesLimpia.xlsx")
+canjesnacional <- canjes %>% 
+  group_by(Fecha) %>% 
+  summarise(Total = sum(Total, na.rm = F))
+delitos <- delitos %>% 
+  filter(Año > 2016)
+
+# Nombres entidades
+
+delitos$Entidad[delitos$Entidad == "Coahuila de Zaragoza"] <- "Coahuila"
+delitos$Entidad[delitos$Entidad == "Michoacán de Ocampo"] <- "Michoacán"
+delitos$Entidad[delitos$Entidad == "Veracruz de Ignacio de la Llave"] <- "Veracruz"
+poblacion$Entidad[poblacion$Entidad == "Coahuila de Zaragoza"] <- "Coahuila"
+poblacion$Entidad[poblacion$Entidad == "Estado de México"] <- "México"
+poblacion$Entidad[poblacion$Entidad == "Michoacán de Ocampo"] <- "Michoacán"
+poblacion$Entidad[poblacion$Entidad == "Veracruz de Ignacio de la Llave"] <- "Veracruz"
+
+# Arreglo base delitos y fechas
+
+delitos <- delitos %>% 
+  gather(mes, valor, -c(Año, Clave_Ent, Entidad, `Bien jurídico afectado`, `Tipo de delito`, `Subtipo de delito`, Modalidad))
+
+delitos$mes[delitos$mes == "Enero"] <- 1
+delitos$mes[delitos$mes == "Febrero"] <- 2
+delitos$mes[delitos$mes == "Marzo"] <- 3
+delitos$mes[delitos$mes == "Abril"] <- 4
+delitos$mes[delitos$mes == "Mayo"] <- 5
+delitos$mes[delitos$mes == "Junio"] <- 6
+delitos$mes[delitos$mes == "Julio"] <- 7
+delitos$mes[delitos$mes == "Agosto"] <- 8
+delitos$mes[delitos$mes == "Septiembre"] <- 9
+delitos$mes[delitos$mes == "Octubre"] <- 10
+delitos$mes[delitos$mes == "Noviembre"] <- 11
+delitos$mes[delitos$mes == "Diciembre"] <- 12
+
+delitos$Fecha <- as.yearmon(paste(delitos$Año, delitos$mes), "%Y %m")
+delitos$Fecha <- format(delitos$Fecha,
+                       "%m-%Y")
+delitos$Fecha <- my(delitos$Fecha)
+
+```
+
+Latinoamérica es la región del mundo donde más se utilizan las armas de fuego para cometer homicidios. Mientras que en África y Asia el 28% de los homicidios se cometen con armas de fuego, en Europa el 13%, en Oceanía el 10% y en Latinoamérica el 66%; para el caso mexicano, las armas de fuego se utilizaron en más de la mitad de los homicidios de 2006 a 2016 (Arriaga & Roldán, 2016). Con el objetivo de ahondar más en los antecedentes al respecto, a continuación se presenta, en primer lugar, un panorama general sobre las incidencias delictivas más importantes del país en los últimos años; en segundo lugar, una revisión general de la legislación alrededor de la portación de armas de fuego en México.
+
+En el portal de datos abiertos sobre incidencia delictiva, elaborado por el Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública (SESNSP), se exhibe información sobre el número de delitos cometidos por entidad federativa mensualmente de enero de 2015 a diciembre de 2021. Dicha información desagrega la incidencia delictiva en cuatro grupos: (1) "Bien jurídico afectado", compuesto por siete categorías como "libertad personal", "patrimonio" o "familia"; (2) "Tipo de delito", el cual incluye 40 categorías como "homicidio", "lesiones" o "feminicidio"; (3) "Subtipo de delito", con 55 clasificaciones tales como "homicidio culposo", "violación equiparada" o "violencia familiar"; y (4) "Modalidad", compuesta de 59 categorías, entre las que se encuentran "con arma de fuego", "con arma blanca" o "secuestro extorsivo".
+
+De acuerdo a esta fuente, en los últimos 5 años, 2019 fue el año donde más se cometieron delitos en el país. Además, se observa que en 2020 y 2021 este número disminuyó sensiblemente; en su Índice de Paz México 2021, el *Institute for Economics and Peace* reporta una mejora del 3.5% de la paz en nuestro país en 2020 que, si bien comenzó antes del inicio de la pandemia de Covid-19, fue coadyuvada por la implementación de medidas de salud pública y las órdenes de quedarse en casa (IEP, 2021). La siguiente gráfica ilustra la incidencia delictiva total nacional desde enero de 2017 a diciembre de 2021, anualmente:
+
+```{r DELITOS NACIONAL GENERAL, echo =FALSE}
+
+delitosnacionalanual <- delitos %>% 
+  group_by(Año) %>% 
+  summarise(DelitosNacional = sum(valor, na.rm = T))
+
+delitosnacionalanual %>%
+  ggplot(aes(x = Año, y = DelitosNacional)) +
+    geom_bar(stat = "identity", position = "dodge", fill = "#ffca3a", color = "black", size = 1.4) +
+  labs(title = "Figura 1. Delitos cometidos en México, 2017 - 2021.",
+       x = "Año", y = "Frecuencia", caption = "Fuente: Elaboración propia con datos del SESNSP.") +
+  scale_y_continuous(n.breaks = 7) +
+  theme_minimal() +
+theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), plot.caption = element_text(hjust = 0))
+
+```
+
+Dada la gran cantidad de tipos, subtipos y modalidades de delitos utilizadas por el SESNSP, la Figura 2 exhibe la incidencia delictiva de algunos de los delitos más reportados durante el periodo estudiado, a saber: Abuso de confianza, Amenazas, Daño a la propiedad, Falsificación, Fraude, Lesiones, Narcomenudeo, Otros delitos del fuero común y Violencia Familiar. Tal y como se observa en ella, no parece existir una tendencia evidentemente creciente o decreciente de ninguno de los delitos presentados: este comportamiento es relevante toda vez que sugiere que no existió una política a nivel nacional que haya contribuido al mejoramiento de de la seguridad nacional en su conjunto.
+
+```{r DELITOS Y HOMICIDIOS NACIONAL, echo=FALSE}
+
+delitosnacional <- delitos %>% 
+  group_by(Año, mes, `Tipo de delito`) %>% 
+  summarise(DelitosNacional = sum(valor))
+
+delitosnacional <- delitosnacional %>%
+  mutate(Fecha = make_date(Año, mes))%>% 
+  filter(Fecha < as.Date("2021-12-01") & `Tipo de delito` %in% c("Homicidio", "Violencia familiar", "Lesiones", "Narcomenudeo", "Daño a la propiedad",
+                                                                 "Fraude", "Amenazas", "Otros delitos del Fuero Común", "Falsificación", 
+                                                                 "Abuso de confianza"))
+
+
+delitosnacional %>%
+  filter(`Tipo de delito` != "Homicidio") %>% 
+  ggplot(aes(Fecha, DelitosNacional)) +
+  geom_line(size = 1.1, color = "#8ac926") +
+  geom_point(size = 0.2) +
+  labs(title = "Figura 2. Delitos seleccionados cometidos mensualmente en México, \n 2017 - 2021.",
+       x = "Fecha", y = "Frecuencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP. \n \n Nota: Se muestran delitos seleccionados dado el gran número de categorías reportadas por el SESNSP. \n Para información detallada sobre la totalidad de ellos, visitar el portal de datos abiertos sobre incidencia \n delictiva del SESNSP.") +
+  scale_x_date(date_breaks = "6 months", date_labels = "%m/%Y") +
+  theme_minimal() +
+theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), axis.text.x = element_text(angle = 65, hjust =1, size = 7),
+      plot.caption = element_text(hjust = 0)) +
+  facet_wrap(.~`Tipo de delito`)
+  
+```
+
+Para los fines de la presente investigación, dos clasificaciones relevantes y que vale la pena visualizar son los homicidios (dolosos y culposos) y aquellos delitos cometidos con armas de fuego (cuyo modalidad complementaria son los realizados con armas blancas o con otro elemento). Es importante destacar que los homicidios son clasificados como "Tipo de delito" y los delitos con armas de fuego como "Modalidad"; esto implica que se trata de categorías que se interceptan (homicidios con arma de fuego), pero no se contienen una a la otra por completo: los homicidios son también cometidos con armas blancas u otros elementos, mientras que los delitos con armas de fuego también incluyen lesiones dolosas y culposas.
+
+![](C:/Users/marco/OneDrive/Documents/COLMEX/Tesis/Doc/Imágenes/Venn.jpg)
+
+Lo anterior es relevante toda vez que el comportamiento de uno puede explicar al otro, y viceversa, pero también da lugar a variaciones que pueden ser resultado de los delitos diferentes a los homicidios con armas de fuego. La figura de la siguiente página ilustra la evolución de estas dos variables desde enero de 2017 al último dato reportado por el SESNSP. En ella, y en consistencia con lo señalado por el *Institute for Economics and Peace*, se observa una meseta alta en ambas series en el año 2019, seguida de una disminución constante pero ligera hasta el final del periodo.
+
+Nótese que, aunque no se trata de líneas exactamente paralelas, sí se comportan de forma relativamente similar: esto se concatena con el hecho de que la mayoría de los homicidios en México se cometen con armas de fuego. Finalmente, si bien los datos representan los agregados nacionales de las 32 entidades federativas de México, no es posible afirmar que los comportamientos mostrados abajo sean resultado de una baja generalizada de estos tipos de delitos a nivel nacional, o si en cambio, obedecen a una tendencia mucho más pronunciada que exista particularmente en algún o algunos estados del país.
+
+```{r DELITOS ARMAS DE FUEGO NACIONAL, echo=FALSE}
+
+armasdefuegonacional <- delitos %>% 
+  group_by(Año, mes, Modalidad) %>% 
+  summarise(ModalidadNacional = sum(valor))
+
+armasdefuegonacional <- armasdefuegonacional %>%
+  mutate(Fecha = make_date(Año, mes))%>% 
+  filter(Fecha < as.Date("2021-12-01"))
+
+delitosnacional1 <- delitosnacional %>% 
+  filter(`Tipo de delito` %in% c("Homicidio"))
+
+armasdefuegonacional1 <- armasdefuegonacional %>% 
+  filter(Modalidad == "Con arma de fuego")
+
+homicidiosyarmas <- left_join(delitosnacional1, armasdefuegonacional1, by = "Fecha") %>% 
+  select("Fecha", "DelitosNacional", "ModalidadNacional") %>% 
+  rename("Con arma de fuego" = "ModalidadNacional", "Homicidio" = "DelitosNacional") %>% 
+  melt(id.var = "Fecha") %>% 
+  rename("Modalidad de delito" = "variable")
+
+homicidiosyarmas %>%
+  ggplot(aes(x = Fecha, y = value, color = `Modalidad de delito`)) +
+  geom_line(size = 2) +
+  geom_point(size = 1.5, color = "black") +
+  labs(title = "Figura 3. Homicidios y delitos con arma de fuego \n cometidos mensualmente en México, 2017 - 2021.",
+       x = "Fecha", y = "Frecuencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP.") +
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  scale_y_continuous(n.breaks = 7) +
+  scale_color_manual(values = c("#1982c4", "#ff595e")) +
+  theme_minimal() +
+theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), axis.text.x = element_text(angle = 65, hjust =1),
+      legend.position = "bottom", plot.caption = element_text(hjust = 0))
+
+```
+
+Así, resulta pertinente explorar algunas de las tendencias principales a nivel estatal y, específicamente, de la entidad federativa que es objeto principal de la presente investigación: la Ciudad de México. Dado que estados como Veracruz o México evidentemente exhibirán mayores delitos reportados, debido a su alta población, la Figura 4 ilustra los delitos cometidos por cada 100 000 habitantes para las 10 entidades con mayor incidencia delictiva.
+
+En ella se resalta el caso de la capital del país, donde se observa que dicha incidencia aumentó durante el periodo de 2017 a 2019, para después caer en los últimos dos años. Como se mencionó, comparar los delitos reportados sin más llevaría a conclusiones equivocadas sobre las tendencias estatales; definir una incidencia delictiva permite comprobar que, de hecho, el estado más violento proporcionalmente a su población no es el más habitado, sino Colima, el menos poblado de México.
+
+```{r INCIDENCIA ESTADOS, echo=FALSE}
+
+delitosEF <- delitos %>% 
+  group_by(Entidad, Año) %>% 
+  summarise(TotalDelitosEF = sum(valor, na.rm = T))
+
+delitosEF <- left_join(delitosEF, poblacion, by = "Entidad")
+
+delitosEF$IncidenciaEF <- delitosEF$TotalDelitosEF/delitosEF$Poblacion2020
+
+delitosEF %>%
+  filter(Entidad %in% c("México", "Ciudad de México", "Jalisco", "Guanajuato",
+                        "Baja California", "Baja California Sur", "Nuevo León", "Colima", "Aguascalientes", "Querétaro")) %>% 
+  ggplot(aes(x = Año, y = IncidenciaEF, fill = Entidad, color = Entidad)) +
+  geom_line(size = 2)+
+  geom_point(size = 1.5, color = "black", alpha = 0.4) +
+  labs(title = "Figura 4. Delitos cometidos por cada 100 000 personas \n para estados seleccionados, 2017 - 2021",
+       x = "Año", y = "Delitos", caption = "\n Fuente: Elaboración propia con datos del SESNSP.") +
+  scale_y_continuous(n.breaks = 7) +
+  scale_colour_manual(values=c("#EAE4E9",  "#FFF1E6", "#FDE2E4", "#8ac926", "#FAD2E1", "#E2ECE9",
+                           "#BEE1E6", "#F0EFEB", "#DFE7FD", "#CDDAFD")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), plot.caption = element_text(hjust = 0))
+
+```
+
+De manera más específica, la Figura 5 exhibe el número de homicidios y delitos con armas de fuegos cometidos mensualmente en la Ciudad de México. En la parte izquierda de la gráfica, ambas variables se comportan relativamente parecido, fortaleciendo la idea de que la mayoría de homicidios se cometen con armas de fuego. Nótese que durante los primeros meses de 2019 se observa una disminución constante de ambas series; no obstante, la sufrida por los delitos con armas de fuego es mucho más pronunciada.
+
+De hecho, en varios meses durante el periodo final ilustrado, se reportan más homicidios en la Ciudad de México que delitos cometidos con armas de fuego. En general, es posible sugerir dos ideas a partir de la Figura 5: (1) en cierta medida, los delitos con armas de fuego están correlacionados con los homicidios cometidos durante los 48 meses exhibidos y ambas variables podrían explicarse mutuamente; y (2) la caída de los delitos con armas de fuego fue más dramática que la de los homicidios.
+
+```{r HOMICIDIOS Y ARMAS CDMX, echo = FALSE}
+
+  
+armasdefuegoCDMX <- delitos %>% 
+  filter(Entidad == "Ciudad de México") %>% 
+  group_by(Año, mes, Modalidad) %>% 
+  summarise(ModalidadCDMX = sum(valor))
+
+armasdefuegoCDMX <- armasdefuegoCDMX %>%
+  mutate(Fecha = make_date(Año, mes))%>% 
+  filter(Fecha < as.Date("2021-12-01"))
+
+armasdefuegoCDMX <- armasdefuegoCDMX %>% 
+  filter(Modalidad == "Con arma de fuego")
+
+delitosCDMX <- delitos %>% 
+  filter(Entidad == "Ciudad de México" & `Tipo de delito` == "Homicidio") %>%
+  mutate(Fecha = make_date(Año, mes)) %>% 
+  group_by(Fecha, `Tipo de delito`) %>%
+  summarise(DelitosCDMX = sum(valor))
+
+delitosCDMX <- delitosCDMX %>% 
+  filter(`Tipo de delito` %in% c("Homicidio"))
+
+homicidiosyarmasCDMX <- left_join(delitosCDMX, armasdefuegoCDMX, by = "Fecha") %>% 
+  select("Fecha", "DelitosCDMX", "ModalidadCDMX") %>% 
+  rename("Con arma de fuego" = "ModalidadCDMX", "Homicidio" = "DelitosCDMX") %>% 
+  melt(id.var = "Fecha") %>% 
+  rename("Modalidad de delito" = "variable")
+
+homicidiosyarmasCDMX %>%
+  filter(Fecha < as.Date("2021-12-01")) %>% 
+  ggplot(aes(x = Fecha, y = value, color = `Modalidad de delito`)) +
+  geom_line(size = 2) +
+  geom_point(size =1.5, color = "black") +
+  labs(title = "Figura 5. Homicidios y delitos con arma de fuego \n cometidos mensualmente en CDMX, 2017 - 2021.",
+       x = "Fecha", y = "Frecuencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP.") +
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  scale_y_continuous(n.breaks = 7) +
+  scale_color_manual(values = c("#1982c4", "#ff595e")) +
+  theme_minimal() +
+theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), axis.text.x = element_text(angle = 65, hjust =1),
+      legend.position = "bottom", plot.caption = element_text(hjust = 0))
+
+
+```
+
+Habiendo revisado los datos sobre el panorama general de los delitos en México, así como el uso de armas de fuego para cometerlos, es pertinente discutir de manera cualitativa las características de la posesión de armas en México, así como su legislación. Irónicamente, la Dirección General del Registro Federal de Armas de Fuego y Control de Explosivos es el único lugar del país donde se pueden adquirir y registrar armas de fuego cuyo uso, según la Ley Federal de Armas de Fuego y Explosivos, está limitado a las actividades de caza y tiro deportivo, defensa personal (guardaespaldas, seguridad privada, etc.) y para diplomáticos, servidores públicos y celebridades.
+
+A pesar de que la Constitución Política garantiza el derecho de poseer y portar armas, la legislación sobre la posesión y portación de armas en México es sumamente restrictiva en comparación con otros países del mundo: además de la poca disponibilidad de tiendas para adquirirlas, los permisos de posesión doméstica deben renovarse con mucha frecuencia (cada dos años, mientras que en algunos estados de EE.UU. se tiene que renovar cada 7 años, en Australia y Reino Unido cada 5, y en Nueva Zelanda cada 10), los calibres no exclusivos de uso oficial del Ejército Mexicano son escasos y los trámites sumamente extensos. Entonces, ¿por qué los delitos con armas de fuego han sido tan abundantes?
+
+De acuerdo a datos oficiales del Buró de Alcohol, Tabaco, Armas de Fuego y Explosivos de Estados Unidos (ATF, por sus siglas en inglés), el 70% de las armas aseguradas por las fuerzas de seguridad mexicanas de 2011 a 2016 fueron originalmente adquiridas legalmente en puestos de venta en Estados Unidos: la mayoría de las armas traficadas se compran en los EE. UU. a uno de los más de 67,000 comerciantes de armas con licencia del país o a vendedores privados que no tienen una licencia federal. En contraste, quienes tramiten un permiso en México deben entregar un certificado de nacimiento, prueba de que están empleados y un récord criminal limpio (Linthicum, 2018).
+
+De acuerdo a un reportaje de Animal Político y con base en la información de una encuesta telefónica (Nares, 2020), el 72% de la muestra consideró más peligroso tener un arma de fuego en casa que no tenerla, mientras que solo el 7% de los hogares reportaron poseer un arma de fuego. Si bien este porcentaje es mucho menor comparado con el 42% de hogares estadounidenses que tienen armas de fuego, no es despreciable. Además, es posible que este este porcentaje esté subestimado, dado que algunos individuos pueden ser reacios a compartir esta información personal.
+
+En el mismo orden de ideas, es pertinente preguntarse ¿qué tipo de programas relativos a las armas de fuego ofrecen las instituciones reguladoras de las mismas? De acuerdo a Villanueva & Valenzuela (2021), la Secretaría de Seguridad Pública (SSP) y la Secretaría de la Defensa Nacional (Sedena) del Gobierno Federal realizan campañas educativas con el objetivo de reducir la portación, posesión y uso de armas de fuego. 
+
+La página oficial de la Sedena establece dos mecanismos para el canje de armas de fuego: (1) existe un programa permanente para la recepción de armas de fuego por donación por parte de la Sedena [...]" y (2) "respecto a las campañas de 'Canje de armas por despensas, computadoras o efectivo' se deberá establecer comunicación militar más cercana a su domicilio, ya que estas se llevan a cabo por periodos, dependiendo de la entidad federativa [...]" (Sedena, 2019).
+
+En un documento sobre el panorama general de las armas de fuego en la sociedad mexicana (Aguirre, 2020), se sostiene que si bien se han realizado esfuerzos en campañas de canje de armas de forma coordinada entre gobiernos estatales y municipales con dependencias de seguridad pública, aún existe un número no conocido de estos artefactos en manos de civiles, lo que implica un riesgo grande para la paz del país. Además, el autor resalta que la experiencia internacional apunta que con mayores controles y retiro de armas de la población se consiguen avances en la prevención de delitos.
+
+En octubre de 2019, el actual Gobernador de Nuevo León y otrora Senador, Samuel García Sepúlveda, presentó ante la Cámara de Senadores del Congreso de la Unión una iniciativa con Proyecto de Decreto para realizar una adición al artículo 5 de la Ley Federal de Armas de Fuego y Explosivos. Particularmente, el agregado al artículo tenía la intención de que los programas de canje y entrega voluntaria de armas de fuego fueran obligatorios y que contaran con una adecuada promoción. De manera, literal, la propuesta versaba como sigue:
+
+>"Artículo 5 Bis.- La Secretaría de la Defensa Nacional, en coordinación con los gobiernos de los estados, de la Ciudad de México y de los municipios, implementará en todo el territorio nacional un programa de canje y entrega voluntaria de armas de fuego, en dos jornadas anuales.
+
+>Dicho programa consistirá en el canje de armas, municiones y materia para el uso exclusivo del Ejército, Armada y Fuerza Aérea que prevé el artículo 11 de esta ley y las que la Secretaría considere necesarias; por dinero en efectivo o cualquier otro bien de consumo.
+
+>Los programas de canje y entrega voluntaria de armas deberán contar con una adecuada promoción." (Senado de la República, 2019)
+
+Lamentablemente, en febrero de 2020, las Comisiones Unidas de Defensa Nacional y de Estudios Legislativos desecharon la propuesta con la razón de que "de adicionarse el artículo 5 bis en los términos en los que se propone se podría dar diversos conflictos (sic), tanto competenciales como de las normas jurídicas" (Senado de la República, 2020). 
+
+No obstante, el canje de armas de fuego a nivel nacional ha recabado una cantidad considerable de armas durante los últimos años. El Portal de Datos Abiertos de la Sedena reporta que de enero de 2012 a diciembre de 2020 se canjearon 104 584 armas de fuego, 11 435 granadas y 4 497 297 cartuchos mediante las campañas estatales realizadas para este fin. Así, se vislumbra la existencia de la relación más relevante para la presente investigación: aquella entre la disponibilidad de armas de fuego entre la población y la violencia o los delitos cometidos.
+
+
+
+
+\newpage
+
+$$\\[3in]$$
+
+# Estrategia de identificación
+
+Es común que en la literatura económica contemporánea, las investigaciones se enfoquen en la ocurrencia de intervenciones particulares de interés. Para los fines de este documento, la motivación principal es determinar el efecto de un programa o política pública sobre un resultado relevante: el efecto del programa "Sí al desarme, sí a la paz" sobre los delitos con armas de fuego en la Ciudad de México. Así, la naturaleza de los estudios comparativos implica, por construcción, la comparación de una unidad que haya sido expuesta a la intervención de interés contra, al menos, otra unidad que no haya sido expuesta.
+
+Si bien existen diversos métodos para lograr lo anterior, a continuación se explica la metodología motivadora de la presente investigación: el método de control sintético (MCS). Planteado originalmente por Abadie *et. al* (2003, 2010) y retomado por varios autores posteriormente (Cavallo *et. al*, 2013; Pinotti, 2015); además, el autor seminal del método ha publicado diversos manuales y guías para su implementación correcta (Abadie, 2020, 2021). Así, los siguientes párrafos describen la estrategia de identificación y el modelo econométrico a estimar de este documento.
+
+## Configuración inicial
+
+Supóngase que se cuentan con datos para $J+1$ unidades, $j=1,2\dots,J+1$. Sin pérdida de generalidad, se asumirá que la primera unidad ($j=1$) es la unidad tratada, o sea, aquella afectada por la política o intervención de interés. La muestra de donantes (*donor pool*), es decir, el conjunto de unidades de comparación potenciales, $j=2,\dots, J+1$, es una serie de unidades no afectadas por la intervención. En el contexto de interés de esta investigación, la unidad tratada, $j=1$, es la Ciudad de México, mientras que las unidades de comparación potenciales son las 31 entidades federativas restantes.
+
+También se asumirá que los datos abarcan $T$ periodos, donde $T_0$ ocurren antes de la intervención. Así,intervalo de tiempo analizado contempla desde enero de 2017 hasta diciembre de 2021, de manera mensual: esto implica un total de 60 periodos de estudio, $T=60$. Dado que el programa "Sí al desarme, sí a la paz" se lanzó en enero de 2019, entonces se cuentan con 24 periodos antes de la intervención, $T_0=24$.
+
+Además, para cada unidad (entidad federativa) $j$ y cada momento del tiempo (mes) $t$, se observa una variable resultado (delitos con armas de fuego), denominada $Y_{jt}$. Para cada unidad $j$ también se observa un conjunto $k$ de predictores (variables que ayudarán a predecir el comportamiento de la variable resultado), denotados $X_{1j},\dots,X_{kj}$, y que incluyen valores pre-intervención de $Y_{jt}$ y dimensiones no afectadas por la intervención.
+
+Así, los $k\times1$ vectores $X_1,\dots, X_{J+1}$ contienen los valores de los predictores para las unidades $j=1,\dots,J+1$, respectivamente. Por su parte, la matriz $k\times J$, $X_0=[X_2\dots X_{J+1}]$, recoge los valores de los predictores para las $J$ unidades no tratadas. Con la información descrita, para cada unidad $j$ y tiempo $t$, se definirá el resultado potencial sin intervención, $Y_{jt}^N$. Para la unidad afectada por la intervención, y durante el periodo post-intervención, $t>T_0$, se definirá como $Y_{1t}^I$ al resultado potencial bajo la intervención.
+
+Entonces, el efecto de la intervención de interés para la unidad afectada en el periodo $t$ (con $t>T_0$) es:
+
+```{=tex}
+\begin{equation}
+\tau_{1t} = Y_{1t}^I-Y_{1t}^N
+\end{equation}
+```
+
+Dado que la primera unidad es expuesta a la intervención después del periodo $T_0$, entonces se sigue que para $t>T_0$ se tiene $Y_{1t}=Y_{1t}^I$. Intuitivamente, para la unidad afectada por la intervención y un periodo posterior a la intervención observamos el resultado potencial bajo ésta. El gran reto de la evaluación de la política de la presente investigación es, entonces, estimar $Y_{1t}^N$ para $t>T_0$: cómo el resultado de interés se hubiera comportado para la unidad afectada en la ausencia de la intervención. O bien, cómo los delitos con armas de fuego se hubieran comportado en la Ciudad de México en la ausencia del programa "Sí al desarme, sí a la paz".
+
+## Estimación
+
+Cuando los datos utilizados en una estimación por control sintético consisten en entidades agregadas, como estados, regiones o países, suele ser complicado encontrar una sola unidad no afectada que provea de una comparación válida a raíz de la intervención estudiada. Como ya se ha mencionado, el MCS se basa en la posibilidad de que una combinación de unidades de la muestra de donantes pueda aproximarse a las características de la unidad afectada sustancialmente mejor que una sola unidad no afectada.
+
+Un control sintético se define como un promedio ponderado de unidades de la muestra de donantes. Formalmente, puede ser representado por un vector $J\times 1$ de pesos, $W=(w_2,\dots,w_{J+1})'$. Dado el conjunto de pesos, W, los estimadores de control sintético de $Y_{1t}^N$ y $\tau_{1t}$ son, respectivamente:
+
+```{=tex}
+\begin{equation}
+\hat{Y}_{1t}^N=\sum_{j=2}^{J+1}w_jY_{jt}
+\end{equation}
+```
+
+y
+
+```{=tex}
+\begin{equation}
+\hat{\tau}_{1t}^N=Y_{1t}-\hat{Y}_{1t}^N
+\end{equation}
+```
+
+Para evitar un problema de extrapolación, los pesos son restringidos a ser no negativos y a sumar uno; Abadie *et. al* (2015) mostraron que, en el contexto de la estimación de una intervención de política, utilizar pesos no restringidos provoca un problema de extrapolación. Dichas restricciones no solo permiten generar un control sintético igual a un promedio ponderado de la variable resultado de la muestra de donantes, sino que el número de unidades con pesos positivos será relativamente bajo. Estas características del MCS hacen que la naturaleza específica de sus estimaciones contrafactuales sean particularmente transparentes en relación con métodos alternativos (Abadie, 2021).
+
+Por último, nótese que la restricción de que la suma de los pesos estimados sea igual a 1 podría ser satisfecha solo en casos donde los datos de las variables sean reescalados para corregir por diferencias en el tamaño entre unidades. En el contexto de esta investigación, en la sección siguiente se describen los datos utilizados, así como el tratamiento aplicado a ellos para asegurar lo apenas descrito.
+
+## Límite del sesgo
+
+Abadie *et. al* (2010) estudian las propiedades del sesgo de estimadores de control sintético para el caso en donde $Y_{1t}^N$ es generado por un modelo lineal. Los autores muestran que, bajo ciertas condiciones, las estimaciones del MCS tienen un límite de sesgo para un modelo de este tipo. Considérese el siguiente modelo lineal para $Y_{jt}^N$:
+
+```{=tex}
+\begin{equation}
+Y_{jt}^N=\delta_t+\theta_tZ_j+\lambda_t\mu_j+\varepsilon_{jt}
+\end{equation}
+```
+
+donde $\delta_t$ es una tendencia temporal, $Z_j$ y $\mu_j$ son vectores de predictores observados y no observados de $Y_{jt}^N$, respectivamente, con coeficientes $\theta_t$ y $\lambda_t$, y $\varepsilon_{jt}$ un choque transitorio individual con media cero. Sea $X_1$ el vector que incluye $Z_1$ y los resultados pre-intervención para la unidad tratada; y sea $X_0$ la matriz que recoge las mismas variables para las unidades no afectadas.
+
+Supóngase que $X_1=X_0W^*$, esto es, el control sintético representado por $W^*$, es capaz de reproducir las características de la unidad tratada (incluyendo valores pre-intervención). Por construcción, el sesgo de $\hat{\tau}_{it}$ está controlado por el razón entre la escala de los choques transitorios $\varepsilon_{it}$ y el número de periodos pre-intervención $T_0$. La intuición detrás de esto es bastante inmediata.
+
+Bajo el modelo lineal planteado en (4), un MCS que reproduzca los valores de $Z_1$ y $\mu_1$ proveerá de un estimador insesgado de efecto de tratamiento sobre la unidad tratada. Si $X_1=X_0W^*$, entonces el control sintético corresponde al valor de $Z_1$. Dado que $\mu_1$ no es observado, no puede ser emparejado directamente con los datos. 
+
+Un control sintético que reproduce los valores de $Z_1$ pero no logra reproducir los valores de $\mu_1$ solo puede proporcionar una coincidencia cercana con los resultados del pretratamiento si las diferencias en los valores de los choques transitorios entre las unidades tratadas y sintéticas compensan las diferencias en los pesos de factores no observados. Es poco probable que esto suceda cuando la magnitud de los choques transitorios, $\varepsilon_{it}$, es pequeña o el número de períodos de pretratamiento, $T_0$, es grande.
+
+
+## Selección de variables
+
+Como en cualquier otro mecanismo de predicción, la elección de los predictores es una parte fundamental del control sintético. De acuerdo a los mismos autores citados arriba, las variables de predicción en $X_1$ y $X_0$ típicamente incluyen tanto valores pre-intervención de la variable resultado como otros predictores $Z_j$. En el contexto de esta investigación, los otros predictores están compuestos por los valores de otros delitos reportados y que, potencialmente, pueden estar relacionados con los delitos con armas de fuego.
+
+Los valores pre-intervención de la variable resultado, naturalmente disponibles en datos panel como los utilizados aquí, juegan un rol crucial para reproducir los pesos de $\mu_j$ en el modelo lineal planteado en (4). La credibilidad de un MCS depende de su capacidad de seguir la trayectoria de la variable resultado para la unidad tratada durante el periodo pretratamiento.
+
+A manera de cierre de esta sección, es importante apuntar que las particularidades de lo descrito arriba y su correspondencia con el fenómeno estudiado se explicarán en las siguiente secciones de Datos y Resultados. Hasta ahora, solo se ha delineado, de manera general, la configuración general del MCS, por lo que resta especificar de qué manera la información alrededor del programa "Sí al desarme, sí a la paz" efectivamente está supeditada a los requerimientos enunciados y si los resultados encontrados son válidos.
+
+
+
+\newpage
+
+$$\\[3in]$$
+
+# Datos
+
+En conjunto con las dos fuentes principales de información utilizadas en esta investigación, y explicadas abajo, se utilizó el Censo 2020 del Instituto Nacional de Estadística y Geografía (INEGI) y su información sobre la población total por entidad federativa con el objetivo de realizar los análisis posteriores de este documento en términos de incidencia o frecuencia por cada 100 000 habitantes, lo cual garantiza una comparabilidad adecuada entre entidades federativas.
+
+Antes de comenzar la descripción de la información utilizada, conviene apuntar la definición de conceptos relevantes para las siguientes páginas. Por ejemplo, el INEGI define a las armas de fuego como "los instrumentos que utilizan la presión generada por los gases producto de la pólvora, para impulsar uno o varios proyectiles que son lanzados a gran velocidad. $[...]$ se clasifican de la siguiente manera: Armas cortas, diseñada para ser utilizada con una sola mano y armas largas, para cuya utilización se requiere el empleo de ambas manos y/o apoyo en otra parte del cuerpo, generalmente el hombro.".
+
+Asimismo, la misma institución define al homicidio como la "sustracción de la vida de manera intencional" y las lesiones como "un delito contra la integridad corporal, en el que se ocasiona una alteración en la salud y cualquier otro daño que deja huella visible en el cuerpo humano". Por otro lado, el Código Penal Federal define que "comete el delito de feminicidio quien prive de la vida a una mujer por razones de género."
+
+## Canjes de armas de fuego
+
+A pesar de que el Portal de Datos Abiertos del Gobierno de México cuenta con un apartado sobre la campaña federal de canjes de armas de fuego, la información presentada ahí es extremadamente escasa: se trata de registros anuales desde enero de 2012 hasta diciembre de 2020. Así, estos datos no tienen mayor utilidad más allá de una descripción escueta sobre los canjes de armas en el país. Por tal motivo, y para los fines de especificación y metodología de la presente investigación, es necesario contar con datos desagregados: específicamente, por entidad federativa y de manera mensual.
+
+Para ello, se realizó una solicitud de información mediante la Plataforma Nacional de Transparencia (PNT) con el objetivo de obtener la información requerida. Dicha [solicitud](https://buscador.plataformadetransparencia.org.mx/en/buscadornacional?buscador=330026421000900&coleccion=5), realizada el 20 de diciembre de 2021 y con número de folio 330026421000900, fue respondida por la Secretaría de la Defensa Nacional el 10 de enero de 2022 y entregó datos del número de armas canjeadas por entidad federativa con temporalidad mensual, desde enero de 2017 hasta noviembre de 2021.
+
+
+## Delitos con armas de fuego
+
+Para el caso del número de delitos cometidos con armas de fuego, la información sí es pública y fácilmente accesible: el portal de Datos Abiertos de Incidencia Delictiva del Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública (SESNSP) incluye información razonablemente rica al respecto. Para cumplir las metas de esta investigación, se hizo uso de las Cifras de Incidencia Delictiva Estatal, 2015-2021, las cuales están homologadas con la misma metodología de recolección y procesamiento de datos. 
+
+En esta base de datos, se presenta la información sobre el número de delitos reportados por entidad federativa mensualmente en el periodo mencionado, lo cual es consistente con los requisitos de la especificación del modelo. Además, y como se mencionó en una sección anterior, se realiza una caracterización de delitos a partir de 4 clasificaciones derivadas de las averiguaciones previas o carpetas de investigación correspondientes: "Bien jurídico afectado", "Tipo de delito", "Subtipo de delito" y "Modalidad"; así, la Modalidad "con arma de fuego" resulta ser la pertinente para la hipótesis de esta investigación.
+
+Los delitos "con arma de fuego" pueden ser clasificados por "Tipo de delito": "Homicidio", "Lesiones" "Feminicidio"; o bien, ser clasificados por "Subtipo de delito": "Homicidio doloso", "Homicidio culposo", "Lesiones dolosas", "Lesiones culposas" y "Feminicidio". En consecuencia, en las siguientes secciones del presente documento, el término "delitos con armas de fuego" se referirá al conjunto de 5 subtipos de delito apenas mencionados.
+
+\newpage
+
+$$\\[3in]$$
+
+# Resultados
+
+## Pruebas de validez
+
+Como se mencionó con anterioridad, México cuenta con un programa permanente de canje de armas de fuego a nivel nacional, el cual es implementado (al menos esa es la intención) a nivel estatal discrecionalmente por cada gobierno. Sin embargo, vale la pena analizar si esta implementación estatal es igual de homogénea en los estados del país.
+
+En la tabla de la siguiente página se muestran algunas características identificadas de los programas estatales de canje de armas de fuego, a la fecha de realización del presente documento. En ella, es evidente que existen grandes disparidades entre un estado y otro. Por ejemplo, en casos como Aguascalientes o Oaxaca, no existe información alguna sobre fechas, características, locaciones ni características operativas.
+
+Jalisco, México, Zacatecas y la Ciudad de México son los estados que cuentan con mayor información al respecto de sus programas de canje de armas de fuego, siendo esta última la única entidad con datos disponibles sobre su presupuesto asignado y aquella con mayor cantidad de información publicada en sus lineamientos oficiales.
+
+En consecuencia, esta evaluación cualitativa preliminar sugiere que, efectivamente, el programa "Sí al desarme, sí a la paz" de la Ciudad de México está diferenciado en comparación con los del resto del país. Aquellas entidades en color amarillo representan programas de canje de armas de fuego con información también sustancial, por lo que en las siguientes páginas se evaluará la conveniencia de excluirlas en los modelos a estimar.
+
+```{=tex}
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+% \usepackage{lscape}
+\begin{landscape}
+\begin{table}[]
+\centering
+\caption{\textbf{Tabla 1. Características cualitativas de los programas de canje de armas de fuego estatales.}}
+\label{tab:my-table}
+\resizebox{1.4\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Entidad}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Nombre propio de programa \\ de canje de armas de fuego\end{tabular}}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Información en \\ página oficial\end{tabular}}} & \multicolumn{1}{c|}{\textbf{Información Disponible}}                                                                                                                                                                                                                          & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Lineamientos \\ oficiales \\ publicados\end{tabular}}} & \multicolumn{1}{c|}{\textbf{Presupuesto asignado}}                                                     \\ \hline
+Aguascalientes                         & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Baja   California                      & \begin{tabular}[c]{@{}l@{}}Campaña Estatal Permanente de \\ Donación de Armas de Fuego y Explosivos\end{tabular}              & Sí                                                                                                     & Objetivos                                                                                                                                                                                                                                                                     & No                                                                                                            & N/D                                                                                                    \\ \hline
+Baja   California Sur                  & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Campeche                               & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+\rowcolor[HTML]{9AFF99} 
+Ciudad de   México                     & Sí al desarme, sí a la paz                                                                                                    & Sí                                                                                                     & \begin{tabular}[c]{@{}l@{}}Diagnóstico, antecedentes, población objetivo, alcances,\\ objetivos, metas físicas, programación presupuestal, difusión,\\ requisitos de acceso, criterios de inclusión, procedimientos\\ de instrumentación, supervisión y control.\end{tabular} & Sí                                                                                                            & \begin{tabular}[c]{@{}l@{}}2021: 10 millones de pesos\\ 2019-2020: 18.8 millones de pesos\end{tabular} \\ \hline
+Coahuila                               & Canje de Armas Intercambio por la Paz                                                                                         & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Colima                                 & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Chiapas                                & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Chihuahua                              & No                                                                                                                            & Sí                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Durango                                & Por un México en Paz                                                                                                          & Sí                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Guanajuato                             & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Guerrero                               & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Hidalgo                                & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+\rowcolor[HTML]{FFFFC7} 
+Jalisco                                & No                                                                                                                            & Sí                                                                                                     & Objetivos, requisitos, procedimiento.                                                                                                                                                                                                                                         & Sí                                                                                                            & N/D                                                                                                    \\ \hline
+\rowcolor[HTML]{FFFFC7} 
+México                                 & Canje de Armas                                                                                                                & Sí                                                                                                     & \begin{tabular}[c]{@{}l@{}}Objetivo, alcances, referencias, responsabilidades,\\ definiciones, insumos, resultados, desarrollo, formatos e\\ instructivos, distribución, validación.\end{tabular}                                                                             & Sí                                                                                                            & N/D                                                                                                    \\ \hline
+Michoacán                              & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Morelos                                & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Nayarit                                & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Nuevo León                             & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Oaxaca                                 & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Puebla                                 & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Querétaro                              & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Quintana Roo                           & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+San Luis   Potosí                      & Sí al desarme, sí a la paz                                                                                                    & Sí                                                                                                     & Tabulador de incentivos, información general.                                                                                                                                                                                                                                 & No                                                                                                            & N/D                                                                                                    \\ \hline
+Sinaloa                                & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Sonora                                 & No                                                                                                                            & Sí                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Tabasco                                & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Tamaulipas                             & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Tlaxcala                               & Hagamos juntos una nueva historia sin armas                                                                                   & Sí                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Veracruz                               & Sin Armas, Sin Riesgos                                                                                                        & Sí                                                                                                     & Información general                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+Yucatán                                & No                                                                                                                            & No                                                                                                     & N/D                                                                                                                                                                                                                                                                           & No                                                                                                            & N/D                                                                                                    \\ \hline
+\rowcolor[HTML]{FFFFC7} 
+Zacatecas                              & No                                                                                                                            & Sí                                                                                                     & \begin{tabular}[c]{@{}l@{}}Disposiciones generales, características, difusión,\\ presupuesto, insumos, transparencia y rendición de cuentas.\end{tabular}                                                                                                                     & Sí                                                                                                            & N/D                                                                                                    \\ \hline
+\multicolumn{6}{l}{Nota: Revisión cualitativa realizada de manera manual por el autor mediante la inspección de todos los portales oficiales de todas las entidades federativas del país.}
+\end{tabular}%
+}
+\end{table}
+\end{landscape}
+```
+
+
+De acuerdo a la solicitud de información realizada a la Sedena, de enero de 2017 a noviembre de 2021, se canjearon un total de 20 966 armas de fuego en el país: 6 285 largas y 14 681 cortas. Durante este periodo, la Ciudad de México fue la entidad que más armas de fuego canjeadas reportó, seguida por el Estado de México y Coahuila, como se observa en la figura de abajo:
+
+```{r GRAFICA CANJES}
+
+canjes %>% 
+  group_by(Entidad) %>%
+  summarise(TotalEntidad = sum(Total)) %>%
+  ggplot(aes(x = reorder(Entidad, TotalEntidad), y = TotalEntidad)) +
+    geom_bar(stat = "identity", position = "dodge", fill = "#ffca3a", color = "black", size = 0.5) +
+  labs(title = "Figura 6. Armas canjeadas por entidad federativa, \n 2017 - 2021.",
+       x = "Entidad", y = "Armas canjeadas", caption = "\n Fuente: Elaboración propia con datos de la solicitud de información realizada a la Sedena.") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), plot.caption = element_text(hjust = -2)) +
+  coord_flip()
+  
+```
+
+
+No sorprende que la Ciudad de México y el Estado de México, al ser las entidades más pobladas del país, también presenten la frecuencia más alta de armas canjeadas. Sin embargo, es sensato estudiar el comportamiento de las armas canjeadas en el país de manera relativa entre entidades federativas: esto es, tomando en cuenta el total de armas canjeadas y la población de cada estado. 
+
+De acuerdo al censo de población conducido por el INEGI en 2020, el total de habitantes en el país fue de 126 014 024. Proporcionalmente, eso implica que la población de la capital del país representa el 7.3% del total. Si el número de armas canjeadas estuviera en función de la población, se tendría que observar un porcentaje similar para la Ciudad de México en comparación con el agregado nacional.
+
+```{r GRAFICA PROPORCION, echo=FALSE}
+
+canjes <- read_excel("~/COLMEX/Tesis/Datos/CScanjes.xlsx")
+
+canjes <- left_join(canjes, poblacion)
+
+canjes$IncidenciaCanjes <- (canjes$Total/canjes$Poblacion2020)*100000
+
+canjes$Fecha <- as.Date(canjes$Fecha)
+
+canjesnacional <- canjes %>% 
+  filter(Entidad != "Ciudad de México")
+
+canjesCDMX <- canjes %>% 
+  filter(Entidad == "Ciudad de México")
+
+canjesnacional <- canjesnacional %>% 
+  group_by(Fecha) %>% 
+  summarise(Resto = sum(Total))
+
+canjestotal <- 
+  left_join(canjesnacional, canjesCDMX) %>% 
+  select(Fecha, Resto, Total) %>% 
+  rename(CDMX = Total) %>% 
+  mutate(Total = CDMX + Resto, Proporcion = CDMX/Total)
+
+
+canjestotal$Fecha <- as.Date(canjestotal$Fecha)
+
+canjestotal %>%
+  ggplot(aes(x=Fecha, y=Proporcion)) + 
+  labs(title = "Figura 7. Proporción de armas canjeadas en CDMX \n en relación al total nacional, 2017-2021.",
+       x = "Fecha", y = "Proporción", caption = "\n Fuente: Elaboración propia con datos de la solicitud de información realizada a la Sedena. \n \n Nota: Existe un cantidad sustancial de datos faltantes durante el año 2021, tanto por periodo como por \n entidad federativa. Esto puede explicar los meses donde la Ciudad de México constituyó el 100 por ciento \n de las armas canjeadas en el país.") +
+  geom_area(alpha=1 , size=0.75, fill = "#8ac926", color = "black") +
+  scale_fill_viridis(discrete = T) +   
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), axis.text.x = element_text(angle = 65, hjust =1),
+      legend.position = "bottom", plot.caption = element_text(hjust = 0)) +
+  geom_segment(aes(x = as.Date("2017-01-01"), y = 0.08877275, xend = as.Date("2018-12-01"), yend = 0.08877275), color = "black",
+               size=1.1) +
+  annotate("text", x=as.Date("2017-09-01"), y=0.17, label= "mu == 0.088", fontface = "bold", parse = T, color = "black") + 
+  geom_segment(aes(x = as.Date("2019-01-01"), y = 0.6266872, xend = as.Date("2021-12-01"), yend = 0.6266872), color = "black",
+               size=1.1) +
+  annotate("text", x=as.Date("2019-09-01"), y=0.70, label= "mu == 0.62", parse = T, color = "black", fontsize = 8) +
+    geom_vline(xintercept=as.Date("2019-01-01"), linetype="dashed", size = 1.1)
+
+
+```
+
+
+
+
+
+La Figura 7 ilustra la proporción de armas canjeadas en la capital del país en relación al total nacional. En primer lugar, se observa que, durante el periodo anterior al lanzamiento de "Sí al desarme, sí a la paz", de enero de 2017 a diciembre de 2018, esta proporción fluctuó en un nivel promedio de 8.8%. En contraste, una vez iniciado el tratamiento en enero de 2019, la razón se dispara, dando un promedio durante el periodo de enero de 2019 a noviembre de 2021 de 62.66%.
+
+Para corroborar que, efectivamente, la proporción media de las armas canjeadas en la Ciudad de México sufrió un cambio estructural sustantivo a partir de enero de 2019, se realizaron pruebas de hipótesis sobre esta variable antes del inicio de "Sí al desarme, sí a la paz". Estos resultados arrojan un estadístico $t=-2.0633$ y un *p-value* de 0.02583: la probabilidad de que la proporción media de la Ciudad de México, antes del inicio del programa, haya sido menor a 12% en relación al total nacional es de más de 97%.
+
+También se probó la hipótesis de de que la proporción media de las armas canjeadas en la Ciudad de México después del tratamiento fuera mayor al 52% del total nacional: se obtuvo un estadístico $t=1.8067$ y un *p-value* de 0.04099. Es decir, con más del 95% de probabilidad, se puede afirmar que la proporción media de armas canjeadas en la capital del país superó el 52% de enero de 2019 a noviembre de 2021.
+
+
+```{r TTEST PROPORCION, include=FALSE}
+
+canjestotalTest <- canjestotal %>% 
+  filter(Fecha > as.Date("2018-12-01"))
+
+canjestotalTest1 <- canjestotal %>% 
+  filter(Fecha < as.Date("2019-01-01")) 
+
+t.test(canjestotalTest1$Proporcion, mu = 0.12, alternative = "less")
+
+t.test(canjestotalTest$Proporcion, mu = 0.52, alternative = "greater")
+
+
+```
+
+
+
+```{r GRAFICA INCIDENCIA CANJES, echo = FALSE}
+
+incidenciacanjesnacional <- aggregate(canjes$Total, by=list(canjes$Fecha), sum)
+
+incidenciacanjesnacional <- incidenciacanjesnacional %>%
+  mutate(IncidenciaCanjesNacional = (x/126996127)*100000) %>% 
+  rename(Fecha = Group.1)
+
+canjes1 <- left_join(canjes, incidenciacanjesnacional)
+
+canjes1 <- canjes1 %>% 
+  filter(Entidad == "Ciudad de México") %>% 
+  select("Fecha", "IncidenciaCanjes", "IncidenciaCanjesNacional") %>% 
+  melt(id.var = "Fecha") %>% 
+  rename("Incidencia" = "variable")
+
+canjes1 <- canjes1 %>% 
+  mutate(Incidencia = ifelse(as.character(Incidencia) == "IncidenciaCanjes", "CDMX", "Nacional"))
+
+canjes1 %>%
+  ggplot(aes(x = Fecha, y = value, color = Incidencia)) +
+  geom_line(size = 2) +
+  geom_point(size = 1.5, color = "black") +
+  labs(title = "Figura 8. Canjes de armas de fuego por cada 100 000 habitantes \n en CDMX y a nivel nacional, 2017-2021.",
+       x = "Fecha", y = "Incidencia", caption = "\n Fuente: Elaboración propia con datos de la solicitud de información realizada a la Sedena. \n \n Nota: La línea punteada vertical indica el inicio del programa 'Sí al desarme, sí a la paz'.") +
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  scale_y_continuous(n.breaks = 7) +
+  scale_color_manual(values = c("#1982c4", "#ff595e")) +
+  theme_minimal() +
+theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), axis.text.x = element_text(angle = 65, hjust =1),
+      legend.position = "bottom", plot.caption = element_text(hjust = 0)) +
+    geom_vline(xintercept=as.Date("2019-01-01"), linetype="dashed", size = 1.1)
+
+```
+
+Dado que la proporción de armas canjeadas en la Ciudad de México con respecto al total nacional está en función del tamaño y población de la capital del país, es deseable afinar el análisis para observar el número de armas canjeadas por cada 100 000 habitantes en ambos niveles: esto es lo que se ilustra en la Figura 8 de arriba.
+
+En ella, es claro que los canjes de armas de fuego sufrieron una explosión dramática a partir del inicio del programa en enero de 2019. Específicamente, la Ciudad de México reporta una media pretratamiento de 0.4705 y una media postratamiento de 1.7462; por su parte, las medias nacionales antes y después del tratamiento son, respectivamente, 0.3719 y 0.2166. 
+
+Con otra prueba de hipótesis, se encuentran dos resultados relevantes: en primer lugar, se puede descartar la hipótesis nula de que la media de la Ciudad de México antes del tratamiento sea diferente a la media nacional; un $p-value = 0.3719$, $t=0.9096$, y un intervalo de confianza para la incidencia de la capital de $(0.2462, 0.6947)$.
+
+En contraste, la misma prueba de medias para el periodo postratamiento rechaza fuertemente la hipótesis de que el promedio de incidencia en la capital del país no haya sido mayor que el nacional: un $p-value = 0.0004$, $t=3.6711$ y un intervalo de confianza de $(1.041684, \infty)$. 
+
+Así, se fortalece la hipótesis de que el número de armas canjeadas en la Ciudad de México por cada 100 000 habitantes es estadísticamente igual a la nacional antes del inicio de "Sí al desarme, sí a la paz" y superior a esta después de enero de 2019.
+
+
+```{r TTEST INCIDENCIA, include=FALSE}
+
+canjesTest3 <- canjes %>% 
+  filter(Fecha > as.Date("2018-12-01") & Entidad == "Ciudad de México")
+
+canjesTest4 <- canjes %>% 
+  filter(Fecha < as.Date("2019-01-01") & Entidad == "Ciudad de México") 
+
+t.test(canjesTest3$IncidenciaCanjes, mu = 0.2166, alternative = "greater")
+
+t.test(canjesTest4$IncidenciaCanjes, mu = 0.3719)
+
+
+```
+
+El hecho de que la Ciudad de México haya aumentado sustantivamente los canjes de armas de fuego a partir de enero de 2019 es un punto crucial de los supuestos empíricos de la presente investigación. Por tal motivo, se realizó un método de control sintético para robustecer aún más esta hipótesis, cuyos resultados se pueden encontrar en el anexo al final del documento.
+
+Resumidamente, esta estimación calcula qué hubiera ocurrido con los canjes de armas de fuego en la Ciudad de México de no haberse implementado el programa "Sí al desarme, sí a la paz" y se hace uso de predictores a partir de observaciones anteriores de la variable resultado.
+
+Los resultados muestran las dos unidades, sintética y observada, la diferencia entre ambas, los pesos óptimos asignados a las unidades de control y dos pruebas de robustez: una en donde se ilustran placebos para los estados restantes del país y otra en donde se evidencia que la capital del país es la entidad que con el ratio de la raíz del error cuadrático medio más grande (es decir, es la unidad que más cambió su comportamiento postratamiento con respecto a antes de este). A partir de ellas, se evidencia y fortalece la hipótesis planteada anteriormente.
+
+
+## Control sintético de delitos con armas de fuego
+
+Dada la inexistencia de un grupo de control empírico (ya sea como entidades federativas o como promedio nacional), el uso de un MCS está justificado; en la Tabla 2 se expone más detalladamente este argumento. Se construye una Ciudad de México "sintética" como una combinación convexa de estados en el grupo de donantes, de tal forma que esta unidad sintética se asemeje lo más posible al comportamiento de la Ciudad de México "real" antes del inicio del tratamiento.
+
+Derivado de la evaluación cualitativa de la Tabla 1 y de la alta variación en los canjes de armas de fuego de algunos estados, Coahuila, Durango, Guanajuato, Jalisco, México, Morelos, Nayarit, Querétaro, Tamaulipas, Tlaxcala y Zacatecas se excluyen del grupo de donantes, dado que, por una u otra razón, se asemejan relativamente a la condición de la unidad tratada. 
+
+Así, el modelo estimado utiliza 21 entidades del grupo donante, de los 31 estados potenciales. No obstante, los resultados encontrados en las siguientes páginas son robustos y consistentes incluso si se incluyen estas unidades descartadas.
+
+Los predictores utilizados para los delitos con armas de fuego cometidos son: allanamiento de morada, robo de coches con violencia, narcomenudeo, rapto y violación simple; además, observaciones anteriores de los delitos con armas de fuego en abril, julio, septiembre y octubre de 2017 y 2018.
+
+```{r CONTROL SINTETICO PREP, include=FALSE}
+
+# Arreglo para CS
+
+delitosCS <- delitos %>% 
+  group_by(Fecha, Entidad, Modalidad) %>% 
+  summarise(Total = sum(valor, na.rm = TRUE))
+
+delitosCS <- dcast(delitosCS, Fecha + Entidad ~ Modalidad)
+
+delitosCS[,62] <- rowSums(delitosCS[,c(3:61)])
+delitosCS <- delitosCS[,c(1,2,62, 3:61)]
+names(delitosCS)[names(delitosCS) == 'V62'] <- 'TotalDelitos'
+names(delitosCS)[names(delitosCS) == 'Con arma de fuego'] <- 'armas'
+
+delitosCS <- delitosCS %>% 
+  filter(Fecha < as.Date("2021-12-01"))
+
+delitosCS <- full_join(x = delitosCS, y = poblacion, by = "Entidad")
+
+delitosCS <- left_join(delitosCS, canjes)
+
+delitosCS <- delitosCS %>% 
+  rename(Canjes = Total)
+
+delitosCS[,3:67] <- delitosCS[,3:67]*100000/delitosCS$Poblacion2020
+
+delitosCS <- delitosCS %>% 
+  mutate(Fecha = as.Date(Fecha))
+
+delitosCS <- delitosCS %>% 
+  mutate(Entidad = as.factor(Entidad))
+
+write.csv(delitosCS,"C:/Users/marco/OneDrive/Documents/COLMEX/Tesis/Datos/CSSTATA.csv")
+
+```
+
+```{r CONTROL SINTÉTICO DELITOS, echo=FALSE}
+
+CSdelitos <-
+  
+  delitosCS %>% 
+    filter(!Entidad %in% c("Coahuila", "Durango", "Guanajuato", "Jalisco", "México", "Morelos", "Nayarit", "Querétaro", "Tamulipas", "Tlaxcala", "Zacatecas")) %>% 
+  
+  # initial the synthetic control object
+  synthetic_control(outcome = armas, # outcome
+                    unit = Entidad, # unit index in the panel data
+                    time = Fecha, # time index in the panel data
+                    i_unit = "Ciudad de México", # unit where the intervention occurred
+                    i_time = as.Date("2019-01-01"), # time period when the intervention occurred
+                    generate_placebos=T # generate placebo synthetic controls (for inference)
+  ) %>%
+  # predictores
+  generate_predictor(time_window = as.Date("2017-01-01"):as.Date("2018-11-01"),
+                     #motos = mean(`Robo de motocicleta Con violencia`, na.rm = T),
+                     rapto = mean(`Rapto`, na.rm = T),
+                     allanamiento = mean(`Allanamiento de morada`, na.rm = T),
+                     violacion = mean(`Violación simple`, na.rm = T),
+                     #canjes = mean (`IncidenciaCanjes`, na.rm = T),
+                     #amenazas = mean(`Amenazas`, na.rm = T),
+                     #extorsivo = mean(`Secuestro extorsivo`, na.rm = T),
+                     #violencia = mean(`Con violencia`, na.rm = T),
+                     narcomenudeo = mean(`Narcomenudeo`, na.rm = T),
+                     coches = mean(`Robo de coche de 4 ruedas Con violencia`, na.rm =T)) %>%
+  ###########
+#generate_predictor(time_window = as.Date("2017-01-01"),
+                   #delitos0117 = armas) %>%
+generate_predictor(time_window = as.Date("2017-04-01"),
+                   delitos0417 = armas) %>% 
+generate_predictor(time_window = as.Date("2017-07-01"),
+                   delitos0717 = armas) %>%
+generate_predictor(time_window = as.Date("2017-09-01"),
+                   delitos0917 = armas) %>%
+generate_predictor(time_window = as.Date("2017-10-01"),
+                   delitos1017 = armas) %>%
+#generate_predictor(time_window = as.Date("2018-01-01"),
+                   #delitos0118 = armas) %>%
+generate_predictor(time_window = as.Date("2018-04-01"),
+                   delitos0418 = armas) %>%
+generate_predictor(time_window = as.Date("2018-07-01"),
+                   delitos0718 = armas) %>%
+generate_predictor(time_window = as.Date("2018-09-01"),
+                   delitos0918 = armas) %>%
+generate_predictor(time_window = as.Date("2018-10-01"),
+                   delitos1018 = armas) %>%
+  
+  
+  
+  # Generate the fitted weights for the synthetic control
+  generate_weights(optimization_window = as.Date("2017-01-01"):as.Date("2018-12-01"), # time to use in the optimization task
+                   margin_ipop = 0.02,sigf_ipop = 7,bound_ipop = 5 # optimizer options
+  ) %>%
+  
+  # Generate the synthetic control
+  generate_control()
+
+```
+
+```{r PREVIO CS CELITOS, echo = FALSE}
+
+incidenciadelitosnac <- delitos %>% 
+  group_by(Fecha, Entidad, Modalidad) %>% 
+  summarise(Total = sum(valor, na.rm = TRUE))
+
+incidenciadelitosnac <- dcast(incidenciadelitosnac, Fecha + Entidad ~ Modalidad)
+
+incidenciadelitosnac[,62] <- rowSums(incidenciadelitosnac[,c(3:61)])
+incidenciadelitosnac <- incidenciadelitosnac[,c(1,2,62, 3:61)]
+names(incidenciadelitosnac)[names(incidenciadelitosnac) == 'V62'] <- 'TotalDelitos'
+names(incidenciadelitosnac)[names(incidenciadelitosnac) == 'Con arma de fuego'] <- 'armas'
+
+incidenciadelitosnac <- incidenciadelitosnac %>% 
+  filter(Fecha < as.Date("2021-12-01"))
+
+incidenciadelitosnac <- incidenciadelitosnac %>% 
+  filter(Entidad != "Ciudad de México") %>%
+  group_by(Fecha) %>% 
+  summarise(ArmasNac = sum(armas))
+
+incidenciadelitosnac <- delitosCS %>% 
+  filter(Entidad != "Ciudad de México") %>% 
+  group_by(Fecha) %>% 
+  summarise(`Resto del país` = sum(armas))
+
+incidenciadelitosnac$`Resto del país` <- (incidenciadelitosnac$`Resto del país`)*100000/117786183
+
+incidenciadelitosnac <- incidenciadelitosnac %>% 
+  mutate(Fecha = as.Date(Fecha))
+
+incidenciadelitosCDMX <- delitosCS %>% 
+  select(Fecha, Entidad, armas) %>% 
+  filter(Entidad == "Ciudad de México")
+
+incidenciadelitos <- left_join(incidenciadelitosnac, incidenciadelitosCDMX)
+
+incidenciadelitos <- incidenciadelitos %>% 
+  rename(CDMX = armas) %>% 
+  select(Fecha, `Resto del país`, CDMX) %>% 
+  melt(id.var = "Fecha") %>% 
+  rename(Incidencia = value, Zona = variable)
+
+```
+
+
+La información sobre los predictores utilizados se encuentra en la Tabla 2, la cual compara las características pretratamiento de la Ciudad de México sintética con la observada, así como con el promedio de las 21 entidades federativas en el grupo donante.
+
+Esta tabla sugiere que el promedio de los estados del país que no implementaron un programa similar a "Sí al desarme, sí a la paz" no constituyen un grupo de control adecuado para la capital del país. Particularmente, es notorio que el delito de robo de coches con violencia fue menores en el resto del país; por otro lado, el allanamiento de morada, rapto y violación simple exhiben una incidencia más alta. 
+
+En contraste, la Ciudad de México "sintética" reproduce con mucha mayor cercanía el comportamiento realmente observado en la capital. Esos datos son altamente relevantes, toda vez que demuestran la afinidad entre la entidad federativa expuesta al tratamiento y su contraparte sintética.
+
+
+```{=tex}
+\begin{table}[H]
+\centering
+\caption{\textbf{Tabla 2. Medias de predictores de delitos con armas de fuego, Ene 2017 - Dic 2018.}}
+\label{tab:my-table}
+\begin{tabular}{l|rr|r}
+\cline{2-3}
+\multicolumn{1}{c|}{}                                                                                           & \multicolumn{2}{c|}{\textbf{Ciudad de México}}                               & \multicolumn{1}{c}{}                                                                                    \\ \hline
+\multicolumn{1}{|c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Variable (por cada 100 000\\ habitantes)\end{tabular}}} & \multicolumn{1}{c|}{\textbf{Real}} & \multicolumn{1}{c|}{\textbf{Sintética}} & \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Promedio de 21 \\ estados control\end{tabular}}} \\ \hline
+\multicolumn{1}{|l|}{Allanamiento de morada}                                                                                  & \multicolumn{1}{r|}{0.72}          & 0.73                                    & \multicolumn{1}{r|}{1.18}                                                                               \\ \hline
+\multicolumn{1}{|l|}{Robo de coches con violencia}                                                              & \multicolumn{1}{r|}{3.08}          & 3.08                                    & \multicolumn{1}{r|}{2.13}                                                                               \\ \hline
+\multicolumn{1}{|l|}{Narcomenudeo}                                                                              & \multicolumn{1}{r|}{3.86}          & 3.74                                    & \multicolumn{1}{r|}{3.80}                                                                               \\ \hline
+\multicolumn{1}{|l|}{Rapto}                                                                          & \multicolumn{1}{r|}{0.001}          & 0.001                                    & \multicolumn{1}{r|}{0.012}                                                                               \\ \hline
+\multicolumn{1}{|l|}{Violación simple}                                                                          & \multicolumn{1}{r|}{0.66}          & 0.66                                    & \multicolumn{1}{r|}{0.92}                                                                               \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Delitos con armas de fuego,\\ abril 2017\end{tabular}}          & \multicolumn{1}{r|}{2.10}          & 2.16                                    & \multicolumn{1}{r|}{1.68}                                                                               \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Delitos con armas de fuego,\\ julio 2017\end{tabular}}          & \multicolumn{1}{r|}{2.37}          & 2.36                                    & \multicolumn{1}{r|}{2.12}                                                                               \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Delitos con armas de fuego,\\ septiembre 2017\end{tabular}}     & \multicolumn{1}{r|}{2.32}          & 2.24                                    & \multicolumn{1}{r|}{2.08}                                                                               \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Delitos con armas de fuego,\\ octubre 2017\end{tabular}}        & \multicolumn{1}{r|}{2.88}          & 2.89                                    & \multicolumn{1}{r|}{2.75}                                                                               \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Delitos con armas de fuego,\\ abril 2018\end{tabular}}          & \multicolumn{1}{r|}{2.44}          & 2.42                                    & \multicolumn{1}{r|}{2.15}                                                                               \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Delitos con armas de fuego,\\ julio 2018\end{tabular}}          & \multicolumn{1}{r|}{2.67}          & 2.69                                    & \multicolumn{1}{r|}{2.35}                                                                               \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Delitos con armas de fuego,\\ septiembre 2018\end{tabular}}     & \multicolumn{1}{r|}{2.93}          & 2.88                                    & \multicolumn{1}{r|}{2.22}                                                                               \\ \hline
+\multicolumn{1}{|l|}{\begin{tabular}[c]{@{}l@{}}Delitos con armas de fuego,\\ octubre 2018\end{tabular}}        & \multicolumn{1}{r|}{2.69}          & 2.76                                    & \multicolumn{1}{r|}{2.20}                                                                               \\ \hline
+\multicolumn{3}{l}{Fuente: Elaboración propia con datos del SESNSP y Sedena.}
+\end{tabular}
+\end{table}
+```
+
+
+La Figura 9 exhibe los pesos de cada entidad federativa de control, así como de las variables utilizadas como predictores, que se estimaron para la construcción de la unidad sintética de la capital del país. 
+
+Los resultados indican que las tendencias de los delitos con armas de fuego cometidos en la Ciudad de México son reproducidos de mejor manera por una combinación de Michoacán, Veracruz, Puebla, Aguascalientes, Sonora, Guerrero, Colima, Quintana Roo, Chiapas, Chihuahua y Baja California Sue; así como por todos los delitos en los periodos anteriores mencionados arriba.
+
+
+```{r PESOS CS DELITOS, echo = FALSE}
+
+pesosCSdelitos <- unnest(
+  CSdelitos , cols = c('.unit_weights')) %>% 
+  filter(.id == "Ciudad de México" & .type == "treated") %>% 
+  select(unit, weight)
+
+pesosCSdelitos1 <- unnest(
+  CSdelitos , cols = c('.predictor_weights')) %>% 
+  filter(.id == "Ciudad de México" & .type == "treated") %>% 
+  select(variable, weight)
+
+pesosCSdelitos$unit <- factor(pesosCSdelitos$unit, levels = unique(pesosCSdelitos$unit)[order(pesosCSdelitos$weight, decreasing = F)])
+
+pesosCSdelitos1$variable <- factor(pesosCSdelitos1$variable, levels = unique(pesosCSdelitos1$variable)[order(pesosCSdelitos1$variable, decreasing = F)])
+
+p1 <- pesosCSdelitos %>% 
+  ggplot(aes(x = reorder(unit, weight), y = weight)) +
+    geom_bar(stat = "identity", position = "dodge", fill = "#ffca3a", color = "black", size = 0.75) +
+  labs(title = "",
+       x = "Entidad", y = "Peso") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 12,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold")) +
+  coord_flip()
+
+p2 <- pesosCSdelitos1 %>% 
+  ggplot(aes(x = reorder(variable, weight), y = weight)) +
+    geom_bar(stat = "identity", position = "dodge", fill = "#ffca3a", color = "black", size = 0.75) +
+  labs(title = "",
+       x = "Variable", y = "Peso") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 12,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), plot.caption = element_text(hjust = 0)) +
+  coord_flip()
+
+grid.arrange(p1, p2, nrow = 1,
+top=textGrob("Figura 9. Pesos óptimos de estados y variables \n para la Ciudad de México sintética.",gp=gpar(fontsize=14, font = 2)),
+bottom = textGrob("\n Fuente: Elaboración propia con datos del SESNSP y Sedena. \n \n Nota: Pesos calculados automáticamente mediante el uso del paquete 'tidysynth' de R. Las variables \n 'delitosxxxx' indican la observación de los delitos con armas de fuego en el mes y año correspondiente.", gp = gpar(fontsize = 10), x =0., just = "left"))
+
+```
+
+La Figura 10 ilustra los delitos con armas de fuego por cada 100 000 habitantes cometidos en la Ciudad de México de enero de 2017 a noviembre de 2021, así como su contraparte sintética. Es relevante notar que, a diferencia de la Figura 8, la Ciudad de México sintética reproduce de manera mucho más fiel el comportamiento realmente observado en la capital del país previo al lanzamiento del programa "Sí al desarme, sí a la paz".
+
+Aunado a esto, el adecuado balance exhibido en la Tabla 2 sugiere que la Ciudad de México sintética constituye una aproximación sensata de lo que hubiera ocurrido con los delitos con armas de fuego durante el periodo de enero de 2019 a diciembre de 2021 de no haberse implementado el programa.
+
+En consecuencia, el efecto de tratamiento estimado en esta investigación es la diferencia entre los delitos con armas de fuego por cada 100 000 habitantes en la Ciudad de México respecto a su versión sintética. Se observa que, inmediatamente después del inicio del programa en enero de 2019, las dos líneas comienzan a divergir cada vez más: mientras que la Ciudad de México sintética continúa una tendencia más o menos estable, la Ciudad de México real experimentó una caída muy pronunciada. 
+
+A reserva de las pruebas de robustez explicadas más adelante en este documento, la Figura 10 representa el resultado más importante de la presente investigación: a partir del inicio de "Sí al desarme, sí a la paz", la incidencia de delitos con armas de fuego en la Ciudad de México cayeron dramáticamente, separándose sustancialmente de lo que hubiera ocurrido en la ausencia de la intervención.
+
+
+```{r PRINCIPAL CS DELITOS, echo = FALSE}
+
+principalCSdelitos <- unnest(
+  CSdelitos , cols = c('.synthetic_control')) %>% 
+  filter(.id == "Ciudad de México" & .type == "treated") %>% 
+  select(time_unit, real_y, synth_y) %>% 
+  mutate(diff = real_y-synth_y)
+
+principalCSdelitos %>%
+  ggplot() +
+  geom_line(aes(time_unit, real_y), size = 2, color = "#1982c4") +
+  geom_line(aes(time_unit, synth_y), size = 2, color = "#ff595e") +
+  geom_point(aes(time_unit, real_y), size = 1.5, color = "black") +
+  geom_point(aes(time_unit, synth_y), size = 1.5, color = "black") +
+  theme_minimal() +
+    labs(title="Figura 10. Delitos con armas de fuego por cada 100 000 \n habitantes, CDMX observada vs. CDMX sintética.",
+         x = "Fecha", y = "Incidencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena. \n \n Nota: La línea punteada vertical indica el inicio del programa 'Sí al desarme, sí a la paz'.")+
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=12,face="bold"),
+        axis.text.x = element_text(angle = 65, hjust =1), plot.caption = element_text(hjust = 0))+
+  geom_vline(xintercept=as.Date("2019-01-01"), linetype="dashed", size = 1.1) +
+  annotate("text", x=as.Date("2020-05-01"), y=2.20, label= "Observada", size = 5, fontface = "bold", color = "#1982c4") +
+  annotate("text", x=as.Date("2020-05-01"), y=3.4, label= "Sintética", size =5,fontface = "bold", color = "#ff595e") +
+  scale_y_continuous(limits = c(1, 3.7), breaks = seq(0, 3.7, by = 0.5))
+
+```
+Es decir, se sugiere la presencia de un efecto de tratamiento negativo sobre la variable de interés. La Figura 11 ilustra las estimaciones sobre el efecto mensual de "Sí al desarme, sí a la paz"; esto es, la diferencia entre la incidencia delictiva de la Ciudad de México real y sintética.
+
+Se observa que el programa no solo tuvo un efecto negativo sobre los delitos con armas de fuego, sino que este efecto se incrementó con el tiempo. Los resultados apuntan a una reducción promedio mensual de enero de 2019 a noviembre de 2021 de 1.15, lo que representa una caída de 46% respecto al promedio observado de enero de 2017 a diciembre de 2018 de 2.5.
+
+Es importante mencionar que, como medida de robustez, se reestimó el mismo modelo con diferentes predictores. Los resultados fueron, en términos prácticos, los mismos. Algunos de los predictores usados fueron: secuestros de de diferentes tipos (exprés, con rehén, para causar daño y extorsivo), robo a casa habitación, robo a transeúntes, violencia familiar y tráfico de menores, así como observaciones anteriores en periodos distintos a los reportados en la Gráfica 9.
+
+```{r DIFF CS DELITOS, echo = FALSE}
+
+principalCSdelitos %>%
+  ggplot() +
+  geom_line(aes(time_unit, diff), size = 2, color = "#8ac926") +
+  geom_point(aes(time_unit, diff), size = 1.5, color = "black") +
+  theme_minimal() +
+    labs(title="Figura 11. Diferencia en delitos con armas de fuego \n por cada 100 000 habitantes entre CDMX real y sintética.",
+         x = "Fecha", y = "Incidencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena. \n \n Nota: La diferencia ilustrada es una resta simple entre la unidad sintética calculada y la unidad observada \n de la gráfica anterior. La línea punteada vertical indica el inicio del programa 'Sí al desarme, sí a la paz'.")+
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=12,face="bold"),
+        axis.text.x = element_text(angle = 65, hjust =1), plot.caption = element_text(hjust = 0))+
+  geom_vline(xintercept=as.Date("2019-01-01"), linetype="dashed", size = 1.1)+
+  geom_hline(yintercept=0, linetype="dashed", size = 1.1)
+
+
+```
+
+
+
+## Inferencia y pruebas de robustez
+
+### Placebos geográficos
+
+Si bien los resultados anteriores sugieren fuertemente la existencia de un efecto de tratamiento producto del inicio del programa "Sí al desarme, sí a la paz", es deseable preguntarse si los hallazgos descritos podrían ser producto, enteramente, del azar. Si se eligiera otra entidad federativa aleatoriamente, ¿se observaría la misma magnitud del efecto sobre los delitos con armas de fuego?
+
+Para responder esta pregunta, se realizaron pruebas placebo en los 21 estados control: si se observa que la diferencia entre las unidades reales y sintéticas placebo es similar a la de la Ciudad de México, esto implicaría que el análisis realizado no implica un efecto significativo sobre los delitos con armas de fuego en la capital del país.
+
+Por el contrario, si las pruebas placebo muestran que el efecto sobre la Ciudad de México fue relativamente mayor que en el resto del país, se fortalecería la hipótesis planteada en esta investigación.
+
+Metodológicamente, una prueba de placebos consiste en la iteración del MCS sobre las unidades de control: esto es, se aplican las mismas estimaciones a los 21 estados utilizados como comparación, como si estos hubieran recibido el tratamiento en lugar de la Ciudad de México. Estos resultados se ilustran en la Figura 12.
+
+
+```{r PLACEBOS CS DELITOS, echo = FALSE}
+
+CSplacebos <- unnest(
+  CSdelitos , cols = c('.synthetic_control')) %>% 
+  filter(.type == "treated") %>% 
+  select(.id, time_unit, real_y, synth_y) %>% 
+  rename(Entidad = .id, Fecha = time_unit, `Sintetica`= synth_y, Real = real_y) %>% 
+  mutate(diff = Real - Sintetica)
+
+
+CSplacebos %>%
+  filter(Entidad != "Ciudad de México") %>% 
+  ggplot(aes(Fecha, diff, group = Entidad,color = Entidad)) +
+  geom_line(size = 1, color = "grey50", alpha = 0.2) +
+  theme_minimal() +
+    labs(title="Figura 12. Delitos con armas de fuego por cada 100 000 habitantes, \n diferencias para CDMX y 21 placebos estatales.",
+         x = "Fecha", y = "Diferencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena. \n \n Nota: Las líneas grises representan la diferencia entre la unidad sintética y observada para las 21 entidades \n federativas del grupo de donantes. La línea punteada vertical indica el inicio del programa 'Sí al desarme, sí \n a la paz'.")+
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=12,face="bold"),
+        axis.text.x = element_text(angle = 65, hjust =1), plot.caption = element_text(hjust = 0))+
+  geom_line(data = filter(CSplacebos, Entidad == "Ciudad de México"), size = 2, color = "#8ac926") +
+  annotate("text", x=as.Date("2021-01-01"), y=-3, label= "CDMX", size = 5, fontface = "bold", color = "#8ac926") +
+  geom_vline(xintercept=as.Date("2019-01-01"), linetype="dashed", size = 1.1)+
+  geom_hline(yintercept=0, linetype="dashed", size = 1.1)
+
+```
+
+Se observa la diferencia entre unidades reales y sintéticas de 21 estimaciones placebo realizadas, así como la estimada para la Ciudad de México, resaltada en otro color. A partir de lo observado, comienza a ser evidente que, después del inicio del programa "Sí al desarme, sí a la paz" en enero de 2019, la magnitud en la diferencia de la capital del país es inusualmente negativa en comparación con el resto del país.
+
+No obstante, nótese que, durante el periodo pretratamiento, existen varias series cuyo comportamiento es sumamente volátil. Intuitivamente, esto implica que la incidencia de delitos con armas de fuego no puede ser adecuadamente reproducida mediante una combinación convexa para algunos estados.
+
+Por tal motivo, se excluyen a los estados cuya raíz del error predictivo cuadrático medio (*RMSPE*, por sus siglas en inglés) sea, como máximo, hasta 5 veces mayor a la registrada por la Ciudad de México. Esta exclusión es bastante suave, e implica la eliminación de 7 entidades federativas del grupo de donantes: en la Figura 13 se observa que, bajo estas condiciones, la brecha de la Ciudad de México es ahora la más negativa de todas.
+
+```{r PLACEBOS PRUNED CS DELITOS, echo = FALSE}
+
+MSPEdelitos <- CSdelitos %>% grab_signficance()
+
+MSPEdelitos <- MSPEdelitos %>% 
+  mutate(RMSPEpre = sqrt(pre_mspe), RMSPEpost = sqrt(post_mspe))
+
+#MSPEdelitos %>% 
+ #filter(RMSPEpre/0.1527956 < 5)
+
+CSplacebos %>%
+  filter(Entidad %in% c("Sonora", "Michoacán", "Tamaulipas", "Chiapas", "Sinaloa", "Veracruz", "San Luis Potosí", "Puebla", "Tabasco", "Yucatán", "Oaxaca",
+                        "Nuevo León", "Aguascalientes", "Campeche")) %>% 
+  ggplot(aes(Fecha, diff, group = Entidad,color = Entidad)) +
+  geom_line(size = 1, color = "grey50", alpha = 0.2) +
+  theme_minimal() +
+    labs(title="Figura 13. Delitos con armas de fuego por cada 100 000 habitantes. \n Diferencias para CDMX y 14 placebos estatales. \n (Se descartan estados con RMSPE más de 5 veces mayor a CDMX)",
+         x = "Fecha", y = "Diferencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena. \n \n Nota: Las líneas grises representan la diferencia entre la unidad sintética y observada para las 14 entidades \n federativas del grupo de donantes con menor error predictivo cuadrado medio pretratamiento. De acuerdo \n a Abadie (2003, 2010), es deseable eliminar las entidades que exhiban la variación más grande en el periodo \n pretratamiento, toda vez que introducen mucho ruido a las estimaciones y el ajuste de un control sintético \n placebo no será adecuado. La línea punteada vertical indica el inicio del programa 'Sí al desarme, sí a la \n paz'.")+
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=12,face="bold"),
+        axis.text.x = element_text(angle = 65, hjust =1), plot.caption = element_text(hjust = 0))+
+  geom_line(data = filter(CSplacebos, Entidad == "Ciudad de México"), size = 2, color = "#8ac926") +
+  annotate("text", x=as.Date("2021-01-01"), y=-2, label= "CDMX", size =5, fontface = "bold", color = "#8ac926") +
+  geom_vline(xintercept=as.Date("2019-01-01"), linetype="dashed", size = 1.1)+
+  geom_hline(yintercept=0, linetype="dashed", size = 1.1)
+```
+Si la condición de exclusión se endurece (esto es, eliminando a las entidades cuyo RMSPE sea hasta tres veces mayor que el de la capital del país, lo que implica mantener a los estados con un ajuste pretratamiento casi tan bueno como el realizado en la Ciudad de México), el grupo de donantes se reduce a 8 unidades. En la Figura 14, ahora la Ciudad de México es, por mucho, la unidad con un mayor efecto de tratamiento negativo en comparación con el resto.
+
+```{r PLACEBOS PRUNED 2 DELITOS, echo = FALSE}
+
+#MSPEdelitos %>% 
+ #filter(RMSPEpre/0.1527956 < 3)
+
+CSplacebos %>%
+  filter(Entidad %in% c("Sonora", "Tamaulipas", "Chiapas", "Veracruz", "San Luis Potosí", "Puebla", "Oaxaca", "Aguascalientes")) %>% 
+  ggplot(aes(Fecha, diff, group = Entidad,color = Entidad)) +
+  geom_line(size = 1, color = "grey50", alpha = 0.2) +
+  theme_minimal() +
+    labs(title="Figura 14. Delitos con armas de fuego por cada 100 000 habitantes. \n Diferencias para CDMX y 8 placebos estatales. \n (Se descartan estados con R.MSPE más de 3 veces mayor a CDMX)",
+         x = "Fecha", y = "Diferencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena. \n \n Nota: Las líneas grises representan la diferencia entre la unidad sintética y observada para las 8 entidades \n federativas del grupo de donantes con menor error predictivo cuadrado medio pretratamiento.")+
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=12,face="bold"),
+        axis.text.x = element_text(angle = 65, hjust =1), plot.caption = element_text(hjust = 0))+
+  geom_line(data = filter(CSplacebos, Entidad == "Ciudad de México"), size = 2, color = "#8ac926") +
+  annotate("text", x=as.Date("2021-01-01"), y=-2, label= "CDMX", size =5, fontface = "bold", color = "#8ac926") +
+  geom_vline(xintercept=as.Date("2019-01-01"), linetype="dashed", size = 1.1)+
+  geom_hline(yintercept=0, linetype="dashed", size = 1.1)
+
+```
+
+### Ratio MSPE
+
+Otro método para evaluar la validez de los resultados encontrados es mediante el ratio de los errores predictivos cuadrados medios (*MSPE*) pretratamiento vs. postratamiento. En comparación con la prueba de placebos, esta metodología no requiere una condición de exclusión subjetiva.
+
+La intepretación es la siguiente: si la intervención no tuvo efecto, entonces los periodos postratamiento y pretratamiento deberían comportarte similarmente, aproximando el ratio a 1. Si esto no ocurre, entonces se puede rechazar la hipótesis de que no existe un efecto de tratamiento.
+
+La Figura 15 ilustra estos ratios para la Ciudad de México y las 21 unidades de control. El de la capital del país es, sustancialmente, mucho mayor al de las demás entidades (más de 53 veces). Esto implica que si el tratamiento se asignara aleatoriamente a los datos utilizados, la probabilidad de obtener un ratio del *MSPE* tan grande como el de la Ciudad de México es $1/21=0.0476$ (el único con un nivel de confianza de 95%). En la Tabla 3 se encuentran la información detallada al respecto.
+
+```{r RATIO CS DELITOS, echo = FALSE}
+
+MSPEdelitos$unit_name <- factor(MSPEdelitos$unit_name, levels = unique(MSPEdelitos$unit_name)[order(MSPEdelitos$mspe_ratio, decreasing = F)])
+
+MSPEdelitos %>% 
+  ggplot(aes(x=mspe_ratio, y=unit_name)) +
+  geom_bar(stat='identity', fill = "#ffca3a", color = "black", size = 0.75) +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(0, 55, by =5)) +
+  labs(title="Figura 15. Ratio de MSPE pre y postratamiento \n de CDMX y 21 unidades de control.",
+         x = "Ratio", y = "Entidad federativa", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena. \n \n Nota: Formalmente, este ratio representa la razón del error predictivo cuadrado medio \n postratamiento con respecto al error predictivo cuadrado medio pretratamiento. \n Intuitivamente, indica qué tanto cada estado sufrió un cambio de comportamiento o \n tendencia a partir del inicio del programa 'Sí al desarme, sí a la paz'. Por lo tanto, \n el hecho de que la Ciudad de México sea, por mucho, el primer lugar robustece \n enormemente los resultados.")+
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=12,face="bold"),
+        axis.text=element_text(size=10), plot.caption = element_text(hjust = 0))
+```
+
+```{=tex}
+% Please add the following required packages to your document preamble:
+% \usepackage{longtable}
+% Note: It may be necessary to compile the document several times to get a multi-page table to line up properly
+\begin{longtable}[c]{|r|l|r|r|r|r|r|r|}
+\caption{\textbf{Tabla 3. Ratio de MSPE y significancia de todas las unidades.}}
+\label{tab:my-table}\\
+\hline
+\multicolumn{1}{|c|}{\textbf{\#}} &
+  \multicolumn{1}{c|}{\textbf{Unidad}} &
+  \multicolumn{1}{c|}{\textbf{Tipo}} &
+  \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}MSPE\\ pre\end{tabular}}} &
+  \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}MSPE\\ post\end{tabular}}} &
+  \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Ratio MSPE\\ pre/post\end{tabular}}} &
+  \multicolumn{1}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}p-value \\ exacto \\ de Fisher\end{tabular}}} &
+  \multicolumn{1}{c|}{\textbf{Valor z}} \\ \hline
+\endfirsthead
+%
+\endhead
+%
+1  & \multicolumn{1}{c|}{Ciudad de México} & \multicolumn{1}{c|}{Tratada} & 0.028  & 1.506 & 53.166 & 0.045 & 4.398  \\ \hline
+2  & Chiapas                               & Donante                      & 0.020  & 0.151 & 7.582  & 0.091 & 0.264  \\ \hline
+3  & Sonora                                & Donante                      & 0.139  & 0.930 & 6.684  & 0.136 & 0.182  \\ \hline
+4  & Michoacán                             & Donante                      & 0.386  & 2.124 & 5.496  & 0.182 & 0.075  \\ \hline
+5  & San Luis Potosí                       & Donante                      & 0.120  & 0.529 & 4.418  & 0.227 & -0.023 \\ \hline
+6  & Oaxaca                                & Donante                      & 0.138  & 0.528 & 3.837  & 0.273 & -0.076 \\ \hline
+7  & Veracruz                              & Donante                      & 0.050  & 0.148 & 2.947  & 0.318 & -0.157 \\ \hline
+8  & Tabasco                               & Donante                      & 0.139  & 0.390 & 2.806  & 0.364 & -0.169 \\ \hline
+9  & Tamaulipas                            & Donante                      & 0.160  & 0.448 & 2.799  & 0.409 & -0.170 \\ \hline
+10 & Chihuahua                             & Donante                      & 0.824  & 1.768 & 2.146  & 0.455 & -0.229 \\ \hline
+11 & Campeche                              & Donante                      & 0.082  & 0.126 & 1.535  & 0.500 & -0.285 \\ \hline
+12 & Guerrero                              & Donante                      & 0.873  & 1.215 & 1.391  & 0.545 & -0.298 \\ \hline
+13 & Nuevo León                            & Donante                      & 0.150  & 0.190 & 1.268  & 0.591 & -0.309 \\ \hline
+14 & Yucatán                               & Donante                      & 0.338  & 0.418 & 1.236  & 0.636 & -0.312 \\ \hline
+15 & Aguascalientes                        & Donante                      & 0.149  & 0.167 & 1.120  & 0.682 & -0.322 \\ \hline
+16 & Colima                                & Donante                      & 5.828  & 6.033 & 1.035  & 0.727 & -0.330 \\ \hline
+17 & Baja California Sur                   & Donante                      & 10.463 & 8.845 & 0.845  & 0.773 & -0.347 \\ \hline
+18 & Sinaloa                               & Donante                      & 0.427  & 0.334 & 0.782  & 0.818 & -0.353 \\ \hline
+19 & Quintana Roo                          & Donante                      & 0.984  & 0.663 & 0.673  & 0.864 & -0.363 \\ \hline
+20 & Baja California                       & Donante                      & 2.835  & 1.236 & 0.436  & 0.909 & -0.384 \\ \hline
+21 & Hidalgo                               & Donante                      & 0.247  & 0.095 & 0.382  & 0.955 & -0.389 \\ \hline
+22 & Puebla                                & Donante                      & 0.397  & 0.097 & 0.244  & 1.000 & -0.402 \\ \hline
+\multicolumn{8}{l}{Fuente: Elaboración propia con datos del SESNSP y Sedena.}
+\end{longtable}
+```
+
+### *p-values*
+
+Como representación alternativa, en la gráfica de abajo se ilustran *p-values* calculados para cada estado del grupo donante. Intuitivamente, representan la probabilidad de que un cambio en la incidencia de delitos con armas de fuego a partir de enero de 2019 sea enteramente por el azar. Como se observa, la Ciudad de México es la única entidad donde esta probabilidad es menor al 5%.
+
+```{r GRAFICA P VALUES, echo = FALSE}
+
+MSPEdelitos %>%
+  mutate(unit_name = recode(unit_name,
+                            "Baja California" = "BC",
+                            "Quintana Roo" = "QRoo",
+                            "Baja California Sur" = "BCS",
+                            "Aguascalientes" = "Ags",
+                            "Nuevo León" = "NL",
+                            "San Luis Potosí" = "SLP",
+                            "Ciudad de México" = "CDMX")) %>% 
+  ggplot() +
+  geom_point(aes(unit_name, fishers_exact_pvalue), size = 4, color = "#6a4c93", fill = "black") +
+  theme_minimal() +
+    labs(title="Figura 16. Niveles de significancia de un efecto de tratamiento sobre la \n variable resultado para todas las entidades federativas.",
+         x = "Entidad", y = "p-value", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena. \n \n Nota: Los valores p graficados ilustran la significancia estadística de los ratios de los errores predictivos \n cuadrados medios post y pretratamiento. Indican la probabilidad de que un cambio de tendencia en los \n delitos con armas de fuego a partir de enero de 2019 haya sido enteramente por el azar. Es decir, mientras \n más bajo el valor reportado, más probable que haya existido un efecto de tratamiento en enero de 2019 \n ooen la entidad respectiva.")+
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=10,face="bold"),
+        axis.text.x = element_text(angle = 65, hjust =1), plot.caption = element_text(hjust = 0)) +
+  scale_y_continuous(breaks = seq(0, 1, 0.1))
+
+```
+Finalmente, la Figura 17 ilustra los *p-values* de la significancia del efecto de tratamiento en la capital del país para todos los periodos posteriores al inicio de "Sí al desarme, sí a la paz". De manera intuitiva, se refieren a la probabilidad de que lo observado sobre la incidencia de delitos con armas de fuego en la Ciudad de México haya sido producto enteramente del azar, y no una consecuencia directa de la intervención.
+
+Es claro que, si bien los meses inmediatos al inicio del programa podrían haber sido más azarosos (probablemente debido a que, como se mostró en la Figura 10, la capital del país real y sintética apenas comienzan a separarse), eventualmente la discrepancia entre lo observado y lo que hubiera ocurrido en ausencia de tratamiento es, con total seguridad, un efecto de éste.
+
+
+```{r P VALUES LAGGED, echo =FALSE}
+
+pvalues <- read_excel("~/COLMEX/Tesis/Datos/pvalues.xlsx")
+
+pvalues$fecha <- as.Date(pvalues$fecha)
+
+pvalues %>%
+  ggplot() +
+  geom_point(aes(fecha, pvals_std), size = 4, color = "#6a4c93", fill = "black") +
+  theme_minimal() +
+  labs(title="Figura 17. Niveles de significancia del efecto de tratamiento \n en la CDMX por periodo.",
+         x = "Fecha", y = "p-value", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena. \n \n Nota: De manera similar a la figura anterior, aquí se ilustra la significancia estadística del efecto de \n tratamiento, pero solo para el caso de la Ciudad de México y de manera mensual. La intepretación \n es la siguiente: los valores indican la probabilidad de que la caída en la incidencia delictiva realmente \n observada en la capital, en cada mes, haya ocurrido enteramente por el azar.")+
+  scale_x_date(date_breaks = "1 month", date_labels = "%m/%Y") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=10,face="bold"),
+        axis.text.x = element_text(angle = 65, hjust =1), plot.caption = element_text(hjust = 0)) +
+  scale_y_continuous(breaks = seq(0, 1, 0.1))
+
+
+
+```
+
+
+### Placebos temporales
+
+Una manera más de comprobar la robustez de las estimaciones es preguntarse si los resultados serían los mismos con un periodo de tratamiento diferente al real. Así, se volvió a calcular el modelo de la sección 5.2 con diferentes fechas de tratamiento. Si al modificar dicha fecha, el modelo exhibiera resultados bien comportados (es decir, que las unidades real y sintética divergieran independientemente del mes de tratamiento), entonces los resultados encontrados no serían válidos.
+
+```{r PLACEBO TEMPORAL 1, echo=FALSE, fig.height=3.5}
+
+CSdelitosPlacebo1 <-
+  
+  delitosCS %>% 
+    filter(!Entidad %in% c("Coahuila", "Durango", "Guanajuato", "Jalisco", "México", "Morelos", "Nayarit", "Querétaro", "Tamulipas", "Tlaxcala", "Zacatecas")) %>% 
+  
+  # initial the synthetic control object
+  synthetic_control(outcome = armas, # outcome
+                    unit = Entidad, # unit index in the panel data
+                    time = Fecha, # time index in the panel data
+                    i_unit = "Ciudad de México", # unit where the intervention occurred
+                    i_time = as.Date("2017-07-01"), # time period when the intervention occurred
+                    generate_placebos=T # generate placebo synthetic controls (for inference)
+  ) %>%
+  # predictores
+  generate_predictor(time_window = as.Date("2017-01-01"):as.Date("2017-06-01"),
+                     #motos = mean(`Robo de motocicleta Con violencia`, na.rm = T),
+                     rapto = mean(`Rapto`, na.rm = T),
+                     allanamiento = mean(`Allanamiento de morada`, na.rm = T),
+                     violacion = mean(`Violación simple`, na.rm = T),
+                     #canjes = mean (`IncidenciaCanjes`, na.rm = T),
+                     #amenazas = mean(`Amenazas`, na.rm = T),
+                     #extorsivo = mean(`Secuestro extorsivo`, na.rm = T),
+                     #violencia = mean(`Con violencia`, na.rm = T),
+                     narcomenudeo = mean(`Narcomenudeo`, na.rm = T),
+                     coches = mean(`Robo de coche de 4 ruedas Con violencia`, na.rm =T)) %>%
+  ###########
+generate_predictor(time_window = as.Date("2017-01-01"),
+                   delitos0117 = armas) %>%
+  generate_predictor(time_window = as.Date("2017-03-01"),
+                   delitos0317 = armas) %>%
+generate_predictor(time_window = as.Date("2017-05-01"),
+                   delitos0417 = armas) %>% 
+  
+  
+  # Generate the fitted weights for the synthetic control
+  generate_weights(optimization_window = as.Date("2017-01-01"):as.Date("2017-06-01"), # time to use in the optimization task
+                   margin_ipop = 0.02,sigf_ipop = 7,bound_ipop = 5 # optimizer options
+  ) %>%
+  
+  # Generate the synthetic control
+  generate_control()
+
+principalCSdelitos1 <- unnest(
+  CSdelitosPlacebo1 , cols = c('.synthetic_control')) %>% 
+  filter(.id == "Ciudad de México" & .type == "treated") %>% 
+  select(time_unit, real_y, synth_y) %>% 
+  mutate(diff = real_y-synth_y)
+
+principalCSdelitos1 %>%
+  ggplot() +
+  geom_line(aes(time_unit, real_y), size = 2, color = "#1982c4") +
+  geom_line(aes(time_unit, synth_y), size = 2, color = "#ff595e") +
+  geom_point(aes(time_unit, real_y), size = 1.5, color = "black") +
+  geom_point(aes(time_unit, synth_y), size = 1.5, color = "black") +
+  theme_minimal() +
+    labs(title="Figura 18. Placebo temporal, tratamiento en julio 2017.",
+         x = "Fecha", y = "Incidencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena.")+
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=12,face="bold"),
+        axis.text.x = element_text(angle = 65, hjust =1), plot.caption = element_text(hjust = 0))+
+  geom_vline(xintercept=as.Date("2017-07-01"), linetype="dashed", size = 1.1) +
+  annotate("text", x=as.Date("2020-05-01"), y=2.1, label= "Observada", size = 5, fontface = "bold", color = "#1982c4") +
+  annotate("text", x=as.Date("2020-05-01"), y=3.4, label= "Sintética", size =5,fontface = "bold", color = "#ff595e") +
+  scale_y_continuous(limits = c(1, 3.7), breaks = seq(0, 3.7, by = 0.5))
+
+```
+
+```{r PLACEBO TEMPORAL 2, echo=FALSE, fig.height=3.5}
+
+CSdelitosPlacebo2 <-
+  
+  delitosCS %>% 
+    filter(!Entidad %in% c("Coahuila", "Durango", "Guanajuato", "Jalisco", "México", "Morelos", "Nayarit", "Querétaro", "Tamulipas", "Tlaxcala", "Zacatecas")) %>% 
+  
+  # initial the synthetic control object
+  synthetic_control(outcome = armas, # outcome
+                    unit = Entidad, # unit index in the panel data
+                    time = Fecha, # time index in the panel data
+                    i_unit = "Ciudad de México", # unit where the intervention occurred
+                    i_time = as.Date("2018-01-01"), # time period when the intervention occurred
+                    generate_placebos=T # generate placebo synthetic controls (for inference)
+  ) %>%
+  # predictores
+  generate_predictor(time_window = as.Date("2017-01-01"):as.Date("2017-12-01"),
+                     #motos = mean(`Robo de motocicleta Con violencia`, na.rm = T),
+                     rapto = mean(`Rapto`, na.rm = T),
+                     allanamiento = mean(`Allanamiento de morada`, na.rm = T),
+                     violacion = mean(`Violación simple`, na.rm = T),
+                     #canjes = mean (`IncidenciaCanjes`, na.rm = T),
+                     #amenazas = mean(`Amenazas`, na.rm = T),
+                     #extorsivo = mean(`Secuestro extorsivo`, na.rm = T),
+                     #violencia = mean(`Con violencia`, na.rm = T),
+                     narcomenudeo = mean(`Narcomenudeo`, na.rm = T),
+                     coches = mean(`Robo de coche de 4 ruedas Con violencia`, na.rm =T)) %>%
+  ###########
+generate_predictor(time_window = as.Date("2017-01-01"),
+                   delitos0117 = armas) %>%
+  generate_predictor(time_window = as.Date("2017-03-01"),
+                   delitos0317 = armas) %>%
+generate_predictor(time_window = as.Date("2017-05-01"),
+                   delitos0517 = armas) %>% 
+generate_predictor(time_window = as.Date("2017-07-01"),
+                   delitos0717 = armas) %>% 
+generate_predictor(time_window = as.Date("2017-09-01"),
+                   delitos0917 = armas) %>%
+generate_predictor(time_window = as.Date("2017-11-01"),
+                   delitos1117 = armas) %>% 
+  
+  
+  # Generate the fitted weights for the synthetic control
+  generate_weights(optimization_window = as.Date("2017-01-01"):as.Date("2017-12-01"), # time to use in the optimization task
+                   margin_ipop = 0.02,sigf_ipop = 7,bound_ipop = 5 # optimizer options
+  ) %>%
+  
+  # Generate the synthetic control
+  generate_control()
+
+principalCSdelitos2 <- unnest(
+  CSdelitosPlacebo2 , cols = c('.synthetic_control')) %>% 
+  filter(.id == "Ciudad de México" & .type == "treated") %>% 
+  select(time_unit, real_y, synth_y) %>% 
+  mutate(diff = real_y-synth_y)
+
+principalCSdelitos2 %>%
+  ggplot() +
+  geom_line(aes(time_unit, real_y), size = 2, color = "#1982c4") +
+  geom_line(aes(time_unit, synth_y), size = 2, color = "#ff595e") +
+  geom_point(aes(time_unit, real_y), size = 1.5, color = "black") +
+  geom_point(aes(time_unit, synth_y), size = 1.5, color = "black") +
+  theme_minimal() +
+    labs(title="Figura 19. Placebo temporal, tratamiento en enero 2018.",
+         x = "Fecha", y = "Incidencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena.")+
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=12,face="bold"),
+        axis.text.x = element_text(angle = 65, hjust =1), plot.caption = element_text(hjust = 0))+
+  geom_vline(xintercept=as.Date("2018-01-01"), linetype="dashed", size = 1.1) +
+  annotate("text", x=as.Date("2020-05-01"), y=2.20, label= "Observada", size = 5, fontface = "bold", color = "#1982c4") +
+  annotate("text", x=as.Date("2020-05-01"), y=3.4, label= "Sintética", size =5,fontface = "bold", color = "#ff595e") +
+  scale_y_continuous(limits = c(1, 3.7), breaks = seq(0, 3.7, by = 0.5))
+
+```
+
+```{r PLACEBO TEMPORAL 3, echo=FALSE, fig.height=3.5}
+
+CSdelitosPlacebo3 <-
+  
+  delitosCS %>% 
+    filter(!Entidad %in% c("Coahuila", "Durango", "Guanajuato", "Jalisco", "México", "Morelos", "Nayarit", "Querétaro", "Tamulipas", "Tlaxcala", "Zacatecas")) %>% 
+  
+  # initial the synthetic control object
+  synthetic_control(outcome = armas, # outcome
+                    unit = Entidad, # unit index in the panel data
+                    time = Fecha, # time index in the panel data
+                    i_unit = "Ciudad de México", # unit where the intervention occurred
+                    i_time = as.Date("2018-07-01"), # time period when the intervention occurred
+                    generate_placebos=T # generate placebo synthetic controls (for inference)
+  ) %>%
+  # predictores
+  generate_predictor(time_window = as.Date("2017-01-01"):as.Date("2018-06-01"),
+                     #motos = mean(`Robo de motocicleta Con violencia`, na.rm = T),
+                     rapto = mean(`Rapto`, na.rm = T),
+                     allanamiento = mean(`Allanamiento de morada`, na.rm = T),
+                     violacion = mean(`Violación simple`, na.rm = T),
+                     #canjes = mean (`IncidenciaCanjes`, na.rm = T),
+                     #amenazas = mean(`Amenazas`, na.rm = T),
+                     #extorsivo = mean(`Secuestro extorsivo`, na.rm = T),
+                     #violencia = mean(`Con violencia`, na.rm = T),
+                     narcomenudeo = mean(`Narcomenudeo`, na.rm = T),
+                     coches = mean(`Robo de coche de 4 ruedas Con violencia`, na.rm =T)) %>%
+  ###########
+generate_predictor(time_window = as.Date("2017-01-01"),
+                   delitos0117 = armas) %>%
+  generate_predictor(time_window = as.Date("2017-03-01"),
+                   delitos0317 = armas) %>%
+generate_predictor(time_window = as.Date("2017-05-01"),
+                   delitos0517 = armas) %>% 
+generate_predictor(time_window = as.Date("2017-07-01"),
+                   delitos0717 = armas) %>% 
+generate_predictor(time_window = as.Date("2017-09-01"),
+                   delitos0917 = armas) %>%
+generate_predictor(time_window = as.Date("2017-11-01"),
+                   delitos1117 = armas) %>%
+generate_predictor(time_window = as.Date("2018-01-01"),
+                   delitos0118 = armas) %>% 
+generate_predictor(time_window = as.Date("2018-03-01"),
+                   delitos0318 = armas) %>% 
+generate_predictor(time_window = as.Date("2018-05-01"),
+                   delitos0518 = armas) %>% 
+  
+  
+  # Generate the fitted weights for the synthetic control
+  generate_weights(optimization_window = as.Date("2017-01-01"):as.Date("2018-06-01"), # time to use in the optimization task
+                   margin_ipop = 0.02,sigf_ipop = 7,bound_ipop = 5 # optimizer options
+  ) %>%
+  
+  # Generate the synthetic control
+  generate_control()
+
+principalCSdelitos3 <- unnest(
+  CSdelitosPlacebo3 , cols = c('.synthetic_control')) %>% 
+  filter(.id == "Ciudad de México" & .type == "treated") %>% 
+  select(time_unit, real_y, synth_y) %>% 
+  mutate(diff = real_y-synth_y)
+
+principalCSdelitos3 %>%
+  ggplot() +
+  geom_line(aes(time_unit, real_y), size = 2, color = "#1982c4") +
+  geom_line(aes(time_unit, synth_y), size = 2, color = "#ff595e") +
+  geom_point(aes(time_unit, real_y), size = 1.5, color = "black") +
+  geom_point(aes(time_unit, synth_y), size = 1.5, color = "black") +
+  theme_minimal() +
+    labs(title="Figura 20. Placebo temporal, tratamiento en junio 2018.",
+         x = "Fecha", y = "Incidencia", caption = "\n Fuente: Elaboración propia con datos del SESNSP y Sedena.")+
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=12,face="bold"),
+        axis.text.x = element_text(angle = 65, hjust =1), plot.caption = element_text(hjust = 0))+
+  geom_vline(xintercept=as.Date("2018-06-01"), linetype="dashed", size = 1.1) +
+  annotate("text", x=as.Date("2020-05-01"), y=2.20, label= "Observada", size = 5, fontface = "bold", color = "#1982c4") +
+  annotate("text", x=as.Date("2020-05-01"), y=3.4, label= "Sintética", size =5,fontface = "bold", color = "#ff595e") +
+  scale_y_continuous(limits = c(1, 3.7), breaks = seq(0, 3.7, by = 0.5))
+
+```
+
+Como puede observarse en las Figuras 18-20, no importa si el modelo vuelve a reestimarse con periodos de tratamiento en junio de 2017, enero de 2018 o junio de 2018, la separación entre la unidad observada y su contraparte sintética siempre empieza a observarse a partir de enero de 2019, el momento real del tratamiento. 
+
+Esto implica que no existieron choques exógenos a los delitos con armas de fuego anteriores a este fecha y que pudieran sesgar las interpretaciones de los resultados. Así, se fortalece la idea no solo de que existió un efecto de tratamiento, sino que este ocurrió efectivamente en enero de 2019. 
+
+
+\newpage
+
+$$\\[3in]$$
+
+# Conclusión
+
+A lo largo de esta investigación, se examinó el efecto del programa "Sí al desarme, sí a la paz" sobre la incidencia por cada 100 000 habitantes de los delitos con armas de fuego en la Ciudad de México utilizando la metodología de control sintético, planteada hace algunos años y fortalecida por Abadie (2003, 2010, 2020, 2021).
+
+Este procedimiento involucró la identificación de efectos causales a través de la comparación de la evolución actual de los delitos con armas de fuego en la capital del país contra la serie contrafactual de lo que hubiera ocurrido en la ausencia de tratamiento.
+
+Las estimaciones encontradas proveen evidencia del impacto de la disponibilidad de armas entre la población sobre la incidencia de delitos de alto impacto. A diferencia de otros estudios anteriores, se encontró que una menor disponibilidad de armas de fuego sí tiene un efecto estadísticamente significativo en la reducción de cinco delitos cometidos con armas de fuego (homicidios dolosos y culposos, lesiones dolosas y culposas, y feminicidios).
+
+El promedio mensual de delitos con armas de fuego por cada 100 000 habitantes en la Ciudad de México fue 46% menor en el periodo posterior al inicio del programa, en comparación a los 24 meses anteriores a su implementación. Adicionalmente, se observó que la disminución en dicha incidencia no ha dejado de crecer y continúa hasta los últimos datos reportados.
+
+Además, y derivado de las pruebas de robustez realizadas, existe evidencia sustancial de que el impacto el programa afectó únicamente a los delitos descritos solo en la Ciudad de México, además de ser un efecto relativamente grande y significativo en la mayoría de periodos postratamiento estudiados.
+
+A pesar de esto, es pertinente mencionar que estos resultados fueron encontrados específicamente para el caso de la Ciudad de México. Si bien son útiles para abonar al conocimiento sobre los determinantes de la violencia, el alcance de su generalización dependerá enteramente del contexto específico del área o ciudad donde se analice.
+
+Finalmente, es evidente que el estudio de la violencia y sus causas es un tema sustancialmente complejo y variable de acuerdo a las vicisitudes de cada caso. Los hallazgos enunciados en estas páginas solo representan un insumo informativo adicional al respecto y requieren de una comprensión integral del problema para la adecuada formulación de políticas públicas.
+
+\newpage
+
+# Anexo {-}
+
+
+```{r CONTROL SINTÉTICO CANJES, include=FALSE}
+
+CScanjes <-
+  
+  delitosCS %>%
+    filter(!Entidad %in% c("Coahuila", "Durango", "Guanajuato", "Jalisco", "México", "Morelos", "Nayarit", "Querétaro", "Tamulipas", "Tlaxcala", "Zacatecas")) %>%
+  
+  # initial the synthetic control object
+  synthetic_control(outcome = Canjes, # outcome
+                    unit = Entidad, # unit index in the panel data
+                    time = Fecha, # time index in the panel data
+                    i_unit = "Ciudad de México", # unit where the intervention occurred
+                    i_time = as.Date("2019-01-01"), # time period when the intervention occurred
+                    generate_placebos=T # generate placebo synthetic controls (for inference)
+  ) %>%
+  # predictores 
+ # generate_predictor(time_window = as.Date("2017-01-01"):as.Date("2018-11-01"),
+ #                    cortas = mean(`Cortas`, na.rm = T),
+#                     largas = mean(`Largas`, na.rm = T)) %>%
+  ###########
+generate_predictor(time_window = as.Date("2017-01-01"),
+                   canjes1 = Canjes) %>%
+  generate_predictor(time_window = as.Date("2017-03-01"),
+                     canjes3 = Canjes) %>%
+  generate_predictor(time_window = as.Date("2017-05-01"),
+                     canjes5 = Canjes) %>%
+  generate_predictor(time_window = as.Date("2017-07-01"),
+                     canjes7 = Canjes) %>%
+  generate_predictor(time_window = as.Date("2017-09-01"),
+                     canjes9 = Canjes) %>%
+  generate_predictor(time_window = as.Date("2017-11-01"),
+                     canjes11 = Canjes) %>%
+  generate_predictor(time_window = as.Date("2018-01-01"),
+                     canjes13 = Canjes) %>%
+  generate_predictor(time_window = as.Date("2018-03-01"),
+                     canjes15 = Canjes) %>%
+  generate_predictor(time_window = as.Date("2018-07-01"),
+                     canjes19 = Canjes) %>%
+  generate_predictor(time_window = as.Date("2018-09-01"),
+                     canjes21 = Canjes) %>%
+  generate_predictor(time_window = as.Date("2018-11-01"),
+                     canjes23 = Canjes) %>%
+  
+  
+  # Generate the fitted weights for the synthetic control
+  generate_weights(optimization_window = as.Date("2017-01-01"):as.Date("2018-12-01"), # time to use in the optimization task
+                   margin_ipop = 0.02,sigf_ipop = 7,bound_ipop = 5 # optimizer options
+  ) %>%
+  
+  # Generate the synthetic control
+  generate_control()
+
+
+```
+
+```{r ANEXO CS 1, echo= FALSE, fig.height=3.75}
+
+anexoCS <- unnest(
+  CScanjes , cols = c('.synthetic_control')) %>% 
+  filter(.id == "Ciudad de México" & .type == "treated") %>% 
+  select(time_unit, real_y, synth_y) %>% 
+  mutate(diff = real_y-synth_y)
+
+############
+
+anexoCS %>%
+  ggplot() +
+  geom_line(aes(time_unit, real_y), size = 2, color = "#1982c4") +
+  geom_line(aes(time_unit, synth_y), size = 2, color = "#ff595e") +
+  geom_point(aes(time_unit, real_y), size = 1.5, color = "black") +
+  geom_point(aes(time_unit, synth_y), size = 1.5, color = "black") +
+  labs(title = "Figura A1. Unidades sintética y observada de canjes de \n armas de fuego por cada 100 000 habitantes en CDMX, \n 2017-2021.",
+       x = "Fecha", y = "Incidencia") +
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  scale_y_continuous(n.breaks = 7) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), axis.text.x = element_text(angle = 65, hjust =1),
+      legend.position = "bottom") +
+  geom_vline(xintercept= as.Date("2019-01-01"), linetype = "dashed", size = 1.1) +
+  annotate("text", x=as.Date("2017-07-01"), y=1.8, label= "Sintética", size = 5, fontface = "bold", color = "#ff595e") +
+  annotate("text", x=as.Date("2020-03-01"), y=3.3, label= "Observada", size =5,fontface = "bold", color = "#1982c4")
+
+####
+
+anexoCS %>%
+  ggplot() +
+  geom_line(aes(time_unit, diff), size = 2, color = "#8ac926") +
+  geom_point(aes(time_unit, diff), size = 1.5, color = "black") +
+  labs(title = "Figura A2. Diferencia entre unidad observada y sintética.",
+       x = "Fecha", y = "Diferencia") +
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  scale_y_continuous(n.breaks = 7) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), axis.text.x = element_text(angle = 65, hjust =1),
+      legend.position = "bottom") +
+  geom_vline(xintercept= as.Date("2019-01-01"), linetype = "dashed", size = 1.1)
+
+
+##########
+
+anexoPesos <- unnest(
+  CScanjes , cols = c('.unit_weights')) %>% 
+  filter(.id == "Ciudad de México" & .type == "treated") %>% 
+  select(unit, weight)
+
+anexoPesos$unit <- factor(anexoPesos$unit, levels = unique(anexoPesos$unit)[order(anexoPesos$weight, decreasing = F)])
+
+anexoPesos %>% 
+  ggplot(aes(x = reorder(unit, weight), y = weight)) +
+    geom_bar(stat = "identity", position = "dodge", fill = "#ffca3a", color = "black", size = 1) +
+  labs(title = "Figura A3. Pesos óptimos asignados por el MCS.",
+       x = "Entidad", y = "Peso") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 12,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold")) +
+  coord_flip()
+
+######
+
+mspe <- CScanjes %>% grab_signficance()
+
+mspe$unit_name <- factor(mspe$unit_name, levels = unique(mspe$unit_name)[order(mspe$mspe_ratio, decreasing = F)])
+
+anexoPlacebos <- unnest(
+  CScanjes , cols = c('.synthetic_control')) %>% 
+  filter(.type == "treated") %>% 
+  select(.id, time_unit, real_y, synth_y) %>% 
+  rename(Entidad = .id, Fecha = time_unit, `Sintetica`= synth_y, Real = real_y) %>% 
+  mutate(diff = Real - Sintetica)
+
+anexoPlacebos %>%
+  filter(!Entidad %in% c("Zacatecas", "Coahuila", "Durango", "Querétaro", "Guanajuato",
+                         "Tamaulipas", "Sinaloa", "Tlaxcala", "Chiapas") & Fecha < as.Date("2021-11-01")) %>% 
+  ggplot(aes(Fecha, diff, group = Entidad,color = Entidad)) +
+  geom_line(size = 1, color = "grey50", alpha = 0.2) +
+  theme_hc() +
+  labs(title = "Figura A4. Prueba placebo de diferencias \n entre unidades observadas y sintéticas.",
+       x = "Fecha", y = "Diferencia") +
+  scale_x_date(date_breaks = "3 months", date_labels = "%m/%Y") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold", color = "black"), 
+      axis.title=element_text(size=12,face="bold"), axis.text.x = element_text(angle = 65, hjust =1),
+      legend.position = "bottom") +
+  geom_vline(xintercept=as.Date("2019-01-01"), linetype="dashed", size = 1.1) +
+  geom_line(data = filter(anexoPlacebos, Entidad == "Ciudad de México"), size = 2, color = "#8ac926") +
+  annotate("text", x=as.Date("2021-01-01"), y=2, label= "CDMX", size =5, fontface = "bold", color = "#8ac926")
+
+
+######
+
+mspe %>% 
+  ggplot(aes(x=mspe_ratio, y=unit_name)) +
+  geom_bar(stat='identity', fill = "#ffca3a", color = "black", size = 0.75) +
+  theme_minimal() +
+  scale_x_continuous(breaks = seq(0, 15, by =3)) +
+  labs(title="Figura A5. Ratio de MSPE pre y postratamiento \n de unidades con menor variación pretratamiento.",
+         x = "Ratio", y = "Entidad federativa")+
+  theme(plot.title = element_text(hjust = 0.5, size = 14,face="bold"), axis.title=element_text(size=12,face="bold"),
+        axis.text=element_text(size=9))
+
+```
+
+
+
+\newpage
+
+# Referencias
+
+---
+nocite: | 
+  @*
+---
