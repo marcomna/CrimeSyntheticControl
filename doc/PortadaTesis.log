@@ -1,0 +1,777 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 21.1) (preloaded format=pdflatex 2021.2.3)  23 MAY 2022 10:25
+entering extended mode
+**./PortadaTesis.tex
+(PortadaTesis.tex
+LaTeX2e <2020-10-01> patch level 4
+L3 programming layer <2021-01-09> xparse <2020-03-03>
+
+! LaTeX Error: Environment titlepage undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.2 \begin{titlepage}
+                     
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+LaTeX Font Info:    Trying to load font information for OT1+phv on input line 3
+.
+(C:\Users\marco\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1phv.fd
+File: ot1phv.fd 2020/03/25 scalable font definitions for OT1/phv.
+)
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4 	\begin{center}
+                   
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 4--4
+[] 
+ []
+
+! Undefined control sequence.
+l.6 		\includegraphics
+                      [width=20cm]{Imágenes/Portada.png}\\[0.1in]
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (160.25781pt too wide) in paragraph at lines 6--6
+ \OT1/phv/m/n/10 [width=20cm]Im[]agenes/Portada.png 
+ []
+
+! Undefined control sequence.
+l.9 		\Large
+             \textbf {MAESTRÍA EN ECONOMÍA}\\[0.025in]
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (52.21959pt too wide) in paragraph at lines 9--9
+ []\OT1/phv/b/n/10 MAESTR[]IA 
+ []
+
+
+Overfull \hbox (13.8899pt too wide) in paragraph at lines 9--9
+ \OT1/phv/b/n/10 EN 
+ []
+
+
+Overfull \hbox (54.99947pt too wide) in paragraph at lines 9--9
+ \OT1/phv/b/n/10 ECONOM[]IA 
+ []
+
+! Undefined control sequence.
+l.10 		\large
+             {TRABAJO DE INVESTIGACIÓN PARA OBTENER EL GRADO DE \\ MAESTRO ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (46.11961pt too wide) in paragraph at lines 10--10
+ []\OT1/phv/m/n/10 TRABAJO 
+ []
+
+
+Overfull \hbox (13.8899pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 DE 
+ []
+
+
+Overfull \hbox (13.32982pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 IN- 
+ []
+
+
+Overfull \hbox (23.33972pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 VES- 
+ []
+
+
+Overfull \hbox (12.21983pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 TI- 
+ []
+
+
+Overfull \hbox (39.1496pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 GACI[]ON 
+ []
+
+
+Overfull \hbox (26.02979pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 PARA 
+ []
+
+
+Overfull \hbox (48.33958pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 OBTENER 
+ []
+
+
+Overfull \hbox (12.22986pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 EL 
+ []
+
+
+Overfull \hbox (36.66965pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 GRADO 
+ []
+
+
+Overfull \hbox (13.8899pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 DE 
+ []
+
+
+Overfull \hbox (49.24962pt too wide) in paragraph at lines 10--10
+ []\OT1/phv/m/n/10 MAESTRO 
+ []
+
+
+Overfull \hbox (13.8899pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 EN 
+ []
+
+
+Overfull \hbox (54.44942pt too wide) in paragraph at lines 10--10
+ \OT1/phv/m/n/10 ECONOM[]IA 
+ []
+
+
+! LaTeX Error: The font size command \normalsize is not defined:
+               there is probably something wrong with the class file.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.12 		\normalsize
+                   \textbf{ EL EFECTO DEL PROGRAMA \\ ``SÍ AL DESARME, SÍ ...
+
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (12.7799pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 EL 
+ []
+
+
+Overfull \hbox (40.15976pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 EFECTO 
+ []
+
+
+Overfull \hbox (19.99988pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 DEL 
+ []
+
+
+Overfull \hbox (24.79979pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 PRO- 
+ []
+
+
+Overfull \hbox (37.76976pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 GRAMA 
+ []
+
+
+Overfull \hbox (14.44981pt too wide) in paragraph at lines 12--12
+ []\OT1/phv/b/n/10 ``S[]I 
+ []
+
+
+Overfull \hbox (13.32996pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 AL 
+ []
+
+
+Overfull \hbox (17.21985pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 DE- 
+ []
+
+
+Overfull \hbox (38.88963pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 SARME, 
+ []
+
+
+Overfull \hbox (9.44981pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 S[]I 
+ []
+
+
+Overfull \hbox (7.21997pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 A 
+ []
+
+
+Overfull \hbox (13.32996pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 LA 
+ []
+
+
+Overfull \hbox (23.99986pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 PAZ'' 
+ []
+
+
+Overfull \hbox (35.55968pt too wide) in paragraph at lines 12--12
+ []\OT1/phv/b/n/10 SOBRE 
+ []
+
+
+Overfull \hbox (20.5598pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 LOS 
+ []
+
+
+Overfull \hbox (26.10973pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 DELI- 
+ []
+
+
+Overfull \hbox (20.15988pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 TOS 
+ []
+
+
+Overfull \hbox (22.21983pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 CON 
+ []
+
+
+Overfull \hbox (17.7699pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 AR- 
+ []
+
+
+Overfull \hbox (22.21985pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 MAS 
+ []
+
+
+Overfull \hbox (13.8899pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 DE 
+ []
+
+
+Overfull \hbox (35.55966pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 FUEGO 
+ []
+
+
+Overfull \hbox (13.8899pt too wide) in paragraph at lines 12--12
+ []\OT1/phv/b/n/10 EN 
+ []
+
+
+Overfull \hbox (13.32996pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 LA 
+ []
+
+
+Overfull \hbox (20.54979pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 CIU- 
+ []
+
+
+Overfull \hbox (21.26pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 DAD 
+ []
+
+
+Overfull \hbox (13.8899pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 DE 
+ []
+
+
+Overfull \hbox (39.44955pt too wide) in paragraph at lines 12--12
+ \OT1/phv/b/n/10 M[]EXICO 
+ []
+
+
+! LaTeX Error: The font size command \normalsize is not defined:
+               there is probably something wrong with the class file.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.15 		\normalsize
+                   \textbf{MARCO MÉNDEZ ATIENZA}\\[0.3in]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (37.76976pt too wide) in paragraph at lines 15--15
+ []\OT1/phv/b/n/10 MARCO 
+ []
+
+
+Overfull \hbox (42.21973pt too wide) in paragraph at lines 15--15
+ \OT1/phv/b/n/10 M[]ENDEZ 
+ []
+
+
+Overfull \hbox (42.4298pt too wide) in paragraph at lines 15--15
+ \OT1/phv/b/n/10 ATIENZA 
+ []
+
+! Undefined control sequence.
+l.17 		\small
+              \textbf{PROMOCIÓN 2020-2022}\\[0.4in]
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (62.5794pt too wide) in paragraph at lines 17--17
+ []\OT1/phv/b/n/10 PROMOCI[]ON 
+ []
+
+
+Overfull \hbox (25.5697pt too wide) in paragraph at lines 17--17
+ \OT1/phv/b/n/10 2020- 
+ []
+
+
+Overfull \hbox (22.23975pt too wide) in paragraph at lines 17--17
+ \OT1/phv/b/n/10 2022 
+ []
+
+! Undefined control sequence.
+l.19 		\small
+              \textbf{ASESORA:}\\[0.4in]
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (52.77953pt too wide) in paragraph at lines 19--19
+ []\OT1/phv/b/n/10 ASESORA: 
+ []
+
+! Undefined control sequence.
+l.21 		\small
+              \textbf{DRA. AURORA RAMÍREZ ÁLVAREZ}\\[0.4in]
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (24.4398pt too wide) in paragraph at lines 21--21
+ []\OT1/phv/b/n/10 DRA. 
+ []
+
+
+Overfull \hbox (17.26988pt too wide) in paragraph at lines 21--21
+ \OT1/phv/b/n/10 AU- 
+ []
+
+
+Overfull \hbox (29.23985pt too wide) in paragraph at lines 21--21
+ \OT1/phv/b/n/10 RORA 
+ []
+
+
+Overfull \hbox (45.54967pt too wide) in paragraph at lines 21--21
+ \OT1/phv/b/n/10 RAM[]IREZ 
+ []
+
+
+Overfull \hbox (45.3198pt too wide) in paragraph at lines 21--21
+ []\OT1/phv/b/n/10 ALVAREZ 
+ []
+
+! Undefined control sequence.
+l.23 		\small
+              MAYO 2022
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (27.59969pt too wide) in paragraph at lines 23--24
+ []\OT1/phv/m/n/10 MAYO 
+ []
+
+
+Overfull \hbox (22.23975pt too wide) in paragraph at lines 23--24
+ \OT1/phv/m/n/10 2022 
+ []
+
+
+! LaTeX Error: \begin{document} ended by \end{titlepage}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.30 \end{titlepage}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Environment titlepage undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.33 \begin{titlepage}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Environment Huge undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.36 	\begin{Huge}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 		\textbf{Agradecimientos}
+                                \\[0.3in]
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \begin{document} ended by \end{Huge}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.38 	\end{Huge}
+                
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (103.61205pt too wide) in paragraph at lines 37--39
+[]\OT1/cmr/bx/n/10 Agradecimientos 
+ []
+
+
+! LaTeX Error: The font size command \normalsize is not defined:
+               there is probably something wrong with the class file.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.40 \normalsize
+                {\textbf{Quiero agradecer a...}}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.40 \normalsize{\textbf{Quiero agradecer a...}
+                                               }
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (53.979pt too wide) in paragraph at lines 40--41
+[]\OT1/cmr/bx/n/10 Quiero
+ []
+
+
+Overfull \hbox (37.1595pt too wide) in paragraph at lines 40--41
+\OT1/cmr/bx/n/10 agrade-
+ []
+
+
+Overfull \hbox (15.118pt too wide) in paragraph at lines 40--41
+\OT1/cmr/bx/n/10 cer
+ []
+
+
+Overfull \hbox (15.17351pt too wide) in paragraph at lines 40--41
+\OT1/cmr/bx/n/10 a... 
+ []
+
+
+! LaTeX Error: \begin{document} ended by \end{titlepage}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.44 \end{titlepage}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Environment titlepage undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.46 \begin{titlepage}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.47 \
+      
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \begin{document} ended by \end{titlepage}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.48 \end{titlepage}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 47--49
+[]
+ []
+
+
+! LaTeX Error: Environment titlepage undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.51 \begin{titlepage}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Environment Huge undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.54 	\begin{Huge}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.55 		\textbf{Resumen}
+                        \\[0.3in]
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \begin{document} ended by \end{Huge}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.56 	\end{Huge}
+                
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (66.06364pt too wide) in paragraph at lines 55--57
+[]\OT1/cmr/bx/n/10 Resumen 
+ []
+
+
+! LaTeX Error: The font size command \normalsize is not defined:
+               there is probably something wrong with the class file.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.58 	\normalsize
+                 {Este trabajo...}
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.58 	\normalsize{E
+                   ste trabajo...}
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no E in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no j in font nullfont!
+Missing character: There is no o in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no . in font nullfont!
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 58--60
+[]
+ []
+
+
+! LaTeX Error: \begin{document} ended by \end{titlepage}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.61 \end{titlepage}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Environment titlepage undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.63 \begin{titlepage}
+                      
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.64 	\
+       
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \begin{document} ended by \end{titlepage}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.65 \end{titlepage}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 64--66
+[]
+ []
+
+)
+! Emergency stop.
+<*> ./PortadaTesis.tex
+                      
+*** (job aborted, no legal \end found)
+
+ 
+Here is how much of TeX's memory you used:
+ 84 strings out of 479618
+ 1376 string characters out of 2865027
+ 273099 words of memory out of 3000000
+ 17350 multiletter control sequences out of 15000+200000
+ 404880 words of font info for 30 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 24i,1n,27p,218b,159s stack positions out of 5000i,500n,10000p,200000b,50000s
+!  ==> Fatal error occurred, no output PDF file produced!
